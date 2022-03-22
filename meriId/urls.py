@@ -16,7 +16,7 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import path , include
 
 from rest_framework_swagger.views import get_swagger_view
 
@@ -28,6 +28,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", admin_redirect, name="admin_redirect"),
     path('api/docs/', swagger_api_docs_urls, name="api-docs"),
+    path('users/', include("users.urls"), name="Users"),
+    path('general/', include("general.urls"), name="Users"),
 ]
 
 

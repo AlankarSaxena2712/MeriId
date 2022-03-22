@@ -69,6 +69,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_swagger',
     'ckeditor',
+
+    'users'
 ]
 
 MIDDLEWARE = [
