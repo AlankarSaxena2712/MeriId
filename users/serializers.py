@@ -27,3 +27,25 @@ class AadharCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = AadharCard
         fields = "__all__"
+
+
+class OperatorAddSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "id",
+            "uuid",
+            "phone_number",
+            "name",
+            "email",
+            "password",
+            "role",
+            "state",
+            "city",
+            "address",
+            "pin_code",
+        ]
+        read_only_fields = [
+            "id",
+            "uuid",
+        ]

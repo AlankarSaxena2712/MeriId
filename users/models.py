@@ -11,7 +11,7 @@ class User(AbstractUser):
     """
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name='UUID')
     name = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=10)
+    phone_number = models.CharField(max_length=10, unique=True)
     state = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
@@ -24,7 +24,7 @@ class User(AbstractUser):
 
     def save(self, *args, **kwargs):
         if not self.username or self.username:
-            self.username = self.email
+            self.username = self.phone_number
         super(User, self).save(*args, **kwargs)
 
     def __str__(self):

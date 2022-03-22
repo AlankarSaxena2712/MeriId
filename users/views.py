@@ -8,7 +8,7 @@ from services.response import create_response, success_response, bad_request_res
 from services.twillio import send_twilio_message
 from services.utility import create_otp, create_token
 
-from users.serializers import LoginSerializer, OtpSendSerializer, UserSerializer, AadharCardSerializer
+from users.serializers import LoginSerializer, OperatorAddSerializer, OtpSendSerializer, UserSerializer, AadharCardSerializer
 
 User = get_user_model()
 
@@ -26,9 +26,12 @@ class SendOtp(generics.CreateAPIView):
                 otp = create_otp()
                 user.set_password(otp)
                 user.save()
-                send_twilio_message(phone_number, otp)
-                return success_response({'message': "success"})
-            return bad_request_response({'message': 'User not found'})
+            else:
+                otp = create_otp()
+                new_user = User.objects.create_user(username=phone_number, phone_number=phone_number, password=otp)
+                new_user.save()
+            send_twilio_message(phone_number, otp)
+            return success_response({'message': "success"})
         return bad_request_response(serializer.errors)
 
 
@@ -42,48 +45,20 @@ class LoginAPIView(generics.CreateAPIView):
             return bad_request_response(serialzer.errors)
         if request.data["phone_number"] is not None or request.data['phone_number'] != "":
             user = generics.get_object_or_404(User, phone_number=request.data["phone_number"])
-            user.set_password(request.data["otp"])
-            user.save()
-            token = create_token(username=user.username, password=request.data["otp"])
-            if token:
-                response = {
-                    "token": token.key,
-                    "user": {
-                        "first_name": user.name,
-                        "email": user.email,
-                        "phone_number": user.phone_number,
-                    }
-                }
-                return create_response(response)
-            elif not user.is_active:
-                return bad_request_response({"message": "Your phone number isn't verified! Please verify than try to login."})
-            else:
-                return bad_request_response({"message": "Invalid OTP!"})
-
-
-# @permission_classes((AllowAny, ))
-# class RegisterAPIView(generics.CreateAPIView):
-#     serializer_class = RegisterSerializer
-
-#     def post(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         if not serializer.is_valid():
-#             return bad_request_response(serializer.errors)
-#         check_user = User.objects.filter(username=request.data["email"])
-#         if not check_user:
-#             user = User.objects.create_user(
-#                 first_name=request.data['first_name'],
-#                 last_name=request.data['last_name'],
-#                 username=request.data['email'],
-#                 email=request.data['email'],
-#                 password=request.data['password'],
-#                 is_active=True,
-#                 phone_number=request.data['phone_number']
-#             )
-#             user.save()
-#             return create_response({"message": "User Created Successfully"})
-#         else:
-#             return bad_request_response({"message": "User with this email already exsist."})
+            if user:
+                if user.check_password(request.data["otp"]):
+                    token = create_token(username=user.username, password=request.data["otp"])
+                    if token:
+                        response = {
+                            "token": token.key,
+                            "user": {
+                                "first_name": user.name,
+                                "email": user.email,
+                                "phone_number": user.phone_number,
+                            }
+                        }
+                        return create_response(response)
+        return bad_request_response({"message": "Invalid OTP!"})
 
 @permission_classes((IsAuthenticated, ))
 class UserPrfile(generics.RetrieveAPIView):
@@ -132,4 +107,29 @@ class UserList(generics.RetrieveAPIView):
         if serializer.is_valid():
             serializer.save()
             return success_response(serializer.data)
+        return bad_request_response(serializer.errors)
+
+
+@permission_classes((IsAuthenticated, ))
+class AddOperator(generics.CreateAPIView):
+    serializer_class = OperatorAddSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            data = request.data
+            new_user = User.objects.create_user(
+                username=data["phone_number"],
+                phone_number=data["phone_number"],
+                name=data["name"],
+                email=data["email"],
+                password=data["password"],
+                role="operator",
+                state=data["state"],
+                city=data["city"],
+                address=data["address"],
+                pin_code=data["pin_code"],
+            )
+            new_user.save()
+            return success_response({"message": "Operator added successfully"})
         return bad_request_response(serializer.errors)
