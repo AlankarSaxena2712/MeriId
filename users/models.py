@@ -64,7 +64,7 @@ class FeedBack(models.Model):
     """
     FeedBack model
     """
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     rating = models.IntegerField(choices=RATING_CHOICES)
     feedback = models.TextField()
