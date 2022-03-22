@@ -23,7 +23,7 @@ class User(AbstractUser):
     other_documents = models.URLField(max_length=255, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        if not self.username or self.username:
+        if len(self.phone_number) == 10:
             self.username = self.phone_number
         super(User, self).save(*args, **kwargs)
 
