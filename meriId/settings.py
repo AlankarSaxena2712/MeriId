@@ -192,4 +192,9 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+TWILIO_ACCOUNT_SID = 'AC122732650a46074d9155c26d1e5a6149'
+TWILIO_AUTH_TOKEN = '6bba7ebf9501f16b4359c2492b9f6421'
+TWILIO_PHONE_NUMBER = '+919389857115'
+
 django_heroku.settings(locals())
