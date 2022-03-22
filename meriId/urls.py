@@ -28,8 +28,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", admin_redirect, name="admin_redirect"),
     path('api/docs/', swagger_api_docs_urls, name="api-docs"),
-    path('users/', include("users.urls"), name="Users"),
-    path('general/', include("general.urls"), name="Users"),
+    path('api/auth/', include("users.urls"), name="Users"),
+    path('api/general/', include("general.urls"), name="Users"),
 ]
 
 

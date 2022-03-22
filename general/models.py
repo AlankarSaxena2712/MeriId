@@ -1,5 +1,13 @@
 import uuid as uuid
+
+from django.contrib.auth import get_user_model
 from django.db import models
+
+from ckeditor.fields import RichTextField
+
+from services.constants import USER_ROLE, RATING_CHOICES
+
+User = get_user_model()
 
 
 class Guidelines(models.Model):

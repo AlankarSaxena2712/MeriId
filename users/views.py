@@ -2,9 +2,11 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import generics
 from rest_framework.decorators import permission_classes
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 
 from services.response import success_response, bad_request_response
+
+from users.serializers import UserSerializer, AadharCardSerializer
 
 User = get_user_model()
 
@@ -56,4 +58,3 @@ class UserList(generics.RetrieveAPIView):
             serializer.save()
             return success_response(serializer.data)
         return bad_request_response(serializer.errors)
-        

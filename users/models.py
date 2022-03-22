@@ -2,9 +2,7 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-from services.constants import RATING_CHOICES, USER_ROLE
-
-from ckeditor.fields import RichTextField
+from services.constants import USER_ROLE
 
 
 class User(AbstractUser):
@@ -30,8 +28,7 @@ class User(AbstractUser):
         super(User, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.uuid
-
+        return str(self.uuid)
 
 
 class AadharCard(models.Model):
@@ -46,4 +43,3 @@ class AadharCard(models.Model):
 
     def __str__(self):
         return self.uuid
-
