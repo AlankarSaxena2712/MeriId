@@ -1,3 +1,4 @@
+import uuid as uuid
 from django.db import models
 
 
