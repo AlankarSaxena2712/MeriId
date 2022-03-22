@@ -6,6 +6,15 @@ from users.models import *
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    pass
+    fieldsets = (
+        (None, {
+            "fields": (
+                "username",
+                "password",
+                "phone_number",
+            ),
+        }),
+    )
+    
 
 admin.site.register(AadharCard)

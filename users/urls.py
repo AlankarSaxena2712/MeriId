@@ -3,9 +3,9 @@ from django.urls import path
 from users.views import *
 
 urlpatterns = [
-    # path('login/', Login.as_view(), name='login'),
-    # path('logout/', Logout.as_view(), name='logout'),
-    # path('register/', Register.as_view(), name='register'),
+    path('login', LoginAPIView.as_view(), name='login'),
+    path('otp-send', SendOtp.as_view(), name='otp-send'),
+    # path('register', RegisterAPIView.as_view(), name='register'),
     path('profile', UserPrfile.as_view(), name='profile'),
     path('operators', OperatorList.as_view(), name='operator-list'),
     # path('operator/<int:pk>/', OperatorList.as_view(), name='operator-list'),

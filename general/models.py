@@ -21,6 +21,9 @@ class Guidelines(models.Model):
     def __str__(self):
         return self.uuid
 
+    class Meta:
+        verbose_name_plural = "Guidelines"
+
 
 class Feedback(models.Model):
     """
