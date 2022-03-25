@@ -15,7 +15,7 @@ class Guidelines(models.Model):
     Guidelines model
     """
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    guideline = RichTextField()
+    guideline = models.TextField()
     user_type = models.CharField(max_length=30, choices=USER_ROLE)
 
     def __str__(self):
