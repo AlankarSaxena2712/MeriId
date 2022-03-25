@@ -4,6 +4,7 @@ from users.views import *
 
 urlpatterns = [
     path('login', LoginAPIView.as_view(), name='login'),
+    path('login/admin', AdminLoginView.as_view(), name='admin-login'),
     path('otp-send', SendOtp.as_view(), name='otp-send'),
     path('profile', UserPrfile.as_view(), name='profile'),
     path('operators', OperatorList.as_view(), name='operator-list'),
