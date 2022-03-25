@@ -10,6 +10,17 @@ class LoginSerializer(serializers.Serializer):
     class Meta:
         fields = ['phone_number', 'otp']
 
+class AdminLoginSerializer(serializers.Serializer):
+    email = serializers.CharField(required=True, max_length=75)
+    password = serializers.CharField(required=True, max_length=50)
+
+    class Meta:
+        fields = ['email', 'password']
+
+    @classmethod
+    def validate_email(cls, value):
+        return value.lower()
+
 
 class OtpSendSerializer(serializers.Serializer):
     phone_number = serializers.CharField(required=True, max_length=10)

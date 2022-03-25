@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
 
 from rest_framework import generics
 from rest_framework.decorators import permission_classes
@@ -8,7 +9,7 @@ from services.response import create_response, success_response, bad_request_res
 from services.twillio import send_twilio_message
 from services.utility import create_otp, create_token
 
-from users.serializers import LoginSerializer, OperatorAddSerializer, OtpSendSerializer, UserSerializer, AadharCardSerializer
+from users.serializers import AdminLoginSerializer, LoginSerializer, OperatorAddSerializer, OtpSendSerializer, UserSerializer, AadharCardSerializer
 
 User = get_user_model()
 
@@ -59,6 +60,22 @@ class LoginAPIView(generics.CreateAPIView):
                         }
                         return create_response(response)
         return bad_request_response({"message": "Invalid OTP!"})
+
+
+class AdminLoginView(generics.CreateAPIView):
+    serializer_class = AdminLoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        serialzer = self.get_serializer(data=request.data)
+        if not serialzer.is_valid():
+            return bad_request_response(serialzer.errors)
+        if request.data["email"] is not None or request.data['email'] != "":
+            user = get_object_or_404(User, email=request.data["email"])
+            token = create_token(username=user.username, password=request.data['password'])
+            if token:
+                return create_response({'token': token.key})
+            else:
+                return bad_request_response({"message": "Invalid Username/Password"})
 
 @permission_classes((IsAuthenticated, ))
 class UserPrfile(generics.RetrieveAPIView):
