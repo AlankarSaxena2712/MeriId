@@ -62,6 +62,7 @@ class LoginAPIView(generics.CreateAPIView):
         return bad_request_response({"message": "Invalid OTP!"})
 
 
+@permission_classes((AllowAny, ))
 class AdminLoginView(generics.CreateAPIView):
     serializer_class = AdminLoginSerializer
 
