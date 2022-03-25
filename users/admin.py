@@ -9,9 +9,20 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {
             "fields": (
+                "uuid",
                 "username",
                 "password",
                 "phone_number",
+                "name",
+                "city",
+                "state",
+                "address",
+                "pin_code",
+                "status",
+                "aadhar_limit",
+                "profile",
+                "role",
+                "other_documents"
             ),
         }),
     )
