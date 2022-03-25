@@ -49,11 +49,9 @@ class OperatorAddSerializer(serializers.ModelSerializer):
             "phone_number",
             "name",
             "email",
-            "password",
             "role",
             "state",
             "city",
-            "address",
             "pin_code",
         ]
         read_only_fields = [

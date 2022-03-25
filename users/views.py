@@ -140,11 +140,10 @@ class AddOperator(generics.CreateAPIView):
                 phone_number=data["phone_number"],
                 name=data["name"],
                 email=data["email"],
-                password=data["password"],
+                password="1234",
                 role="operator",
                 state=data["state"],
                 city=data["city"],
-                address=data["address"],
                 pin_code=data["pin_code"],
             )
             new_user.save()
