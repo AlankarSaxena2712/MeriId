@@ -19,7 +19,7 @@ class Guidelines(models.Model):
     user_type = models.CharField(max_length=30, choices=USER_ROLE)
 
     def __str__(self):
-        return self.uuid
+        return str(self.uuid)
 
     class Meta:
         verbose_name_plural = "Guidelines"
@@ -36,5 +36,5 @@ class Feedback(models.Model):
     feedback = models.TextField()
 
     def __str__(self):
-        return self.uuid
+        return str(self.uuid)
 
