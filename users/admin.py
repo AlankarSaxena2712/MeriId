@@ -9,7 +9,6 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {
             "fields": (
-                "uuid",
                 "username",
                 "password",
                 "phone_number",
