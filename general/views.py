@@ -1,10 +1,13 @@
 from rest_framework import generics
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from general.models import Feedback, Guidelines
 from general.serializers import FeedbackSerializer, GuidelinesSerializer
 from services.response import success_response, bad_request_response
 
 
+@permission_classes((AllowAny, ))
 class GuidelinesView(generics.RetrieveAPIView):
     """
     Retrieve guidelines
@@ -16,6 +19,7 @@ class GuidelinesView(generics.RetrieveAPIView):
         return success_response(serializer.data)
 
 
+@permission_classes((IsAuthenticated, ))
 class FeedbackView(generics.RetrieveAPIView, generics.CreateAPIView):
     """
     Retrieve feedback
