@@ -30,6 +30,8 @@ urlpatterns = [
     path('api/docs/', swagger_api_docs_urls, name="api-docs"),
     path('api/auth/', include("users.urls"), name="Users"),
     path('api/general/', include("general.urls"), name="Users"),
+    path('api/booking/', include("booking.urls"), name="Users"),
+
 ]
 
 

@@ -42,4 +42,16 @@ class AadharCard(models.Model):
     phone_number_linked_to_aadhar = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.uuid
+        return str(self.uuid)
+
+
+class Issue(models.Model):
+    """
+    Issue model
+    """
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False ,  unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    issue = models.TextField()
+
+    def __str__(self):
+        return str(self.uuid)

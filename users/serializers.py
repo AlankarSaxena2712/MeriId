@@ -58,3 +58,10 @@ class OperatorAddSerializer(serializers.ModelSerializer):
             "id",
             "uuid",
         ]
+
+
+
+class IssueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Issue
+        fields = "__all__"

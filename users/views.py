@@ -8,8 +8,9 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from services.response import create_response, success_response, bad_request_response
 from services.twillio import send_twilio_message
 from services.utility import create_otp, create_token
+from users.models import Issue
 
-from users.serializers import AdminLoginSerializer, LoginSerializer, OperatorAddSerializer, OtpSendSerializer, UserSerializer, AadharCardSerializer
+from users.serializers import AdminLoginSerializer, LoginSerializer, OperatorAddSerializer, OtpSendSerializer, UserSerializer, AadharCardSerializer , IssueSerializer
 
 User = get_user_model()
 
@@ -149,4 +150,27 @@ class AddOperator(generics.CreateAPIView):
             )
             new_user.save()
             return success_response({"message": "Operator added successfully"})
+        return bad_request_response(serializer.errors)
+
+
+
+
+
+
+
+
+@permission_classes((IsAuthenticated, ))
+class IssueView(generics.RetrieveAPIView):
+    serializer_class = IssueSerializer
+
+    def get(self, request, *args, **kwargs):
+        users = Issue.objects.all()
+        serializer = self.get_serializer(users, many=True)
+        return success_response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return success_response(serializer.data)
         return bad_request_response(serializer.errors)
