@@ -1,7 +1,7 @@
 from django.urls import path
 
-from users.views import *
+from  booking.views import *
 
 urlpatterns = [
-    path("booking", AddOperator.as_view(), name="booking"),
+    path("booking", BookingView.as_view(), name="booking"),
 ]
