@@ -10,7 +10,7 @@ from services.twillio import send_twilio_message
 from services.utility import create_otp, create_token
 from users.models import Issue
 
-from users.serializers import AdminLoginSerializer, LoginSerializer, OperatorAddSerializer, OtpSendSerializer, UserSerializer, AadharCardSerializer , IssueSerializer
+from users.serializers import AdminLoginSerializer, LoginSerializer, OperatorAddSerializer, OtpSendSerializer, UserSerializer, KycSerializer, IssueSerializer, UserStatusSerializer
 
 User = get_user_model()
 
@@ -153,12 +153,6 @@ class AddOperator(generics.CreateAPIView):
         return bad_request_response(serializer.errors)
 
 
-
-
-
-
-
-
 @permission_classes((IsAuthenticated, ))
 class IssueView(generics.RetrieveAPIView):
     serializer_class = IssueSerializer
@@ -174,3 +168,12 @@ class IssueView(generics.RetrieveAPIView):
             serializer.save()
             return success_response(serializer.data)
         return bad_request_response(serializer.errors)
+
+
+@permission_classes((IsAuthenticated, ))
+class CurrentUserStatusApi(generics.RetrieveAPIView):
+    serializer_class = UserStatusSerializer
+
+    def get(self, request, *args, **kwargs):
+        serializer = self.get_serializer(request.user)
+        return success_response(serializer.data)

@@ -34,9 +34,9 @@ class UserSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class AadharCardSerializer(serializers.ModelSerializer):
+class KycSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AadharCard
+        model = Kyc
         fields = "__all__"
 
 
@@ -65,3 +65,11 @@ class IssueSerializer(serializers.ModelSerializer):
     class Meta:
         model = Issue
         fields = "__all__"
+
+
+class UserStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "status",
+        ]
