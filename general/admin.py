@@ -6,3 +6,4 @@ from general.models import *
 
 admin.site.register(Guidelines)
 admin.site.register(Feedback)
+admin.site.register(Notice)

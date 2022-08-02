@@ -38,3 +38,20 @@ class Feedback(models.Model):
     def __str__(self):
         return str(self.uuid)
 
+
+class Notice(models.Model):
+    """
+    Notice model
+    """
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    file = models.FileField(upload_to='notice/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.uuid)
+
+    class Meta:
+        verbose_name_plural = "Notices"

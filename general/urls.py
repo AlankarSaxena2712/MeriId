@@ -1,8 +1,9 @@
 from django.urls import path
 
-from general.views import FeedbackView, GuidelinesView
+from general.views import FeedbackView, GuidelinesView, NoticeView
 
 urlpatterns = [
     path("guidelines", GuidelinesView.as_view(), name="guidelines"),
     path("feedback", FeedbackView.as_view(), name="feedback"),
+    path("notice", NoticeView.as_view(), name="notice"),
 ]
