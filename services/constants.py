@@ -15,3 +15,12 @@ RATING_CHOICES = (
     (9, '9'),
     (10, '10'),
 )
+
+USER_STATUS = (
+    ('active', 'Active'),
+    ('inactive', 'Inactive'),
+    ('blocked', 'Blocked'),
+    ('aadhar', 'Aadhar'),
+    ('pan', 'Pan'),
+    ('video', 'Video'),
+)

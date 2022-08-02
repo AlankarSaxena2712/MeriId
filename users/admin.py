@@ -13,18 +13,13 @@ class UserAdmin(BaseUserAdmin):
                 "password",
                 "phone_number",
                 "name",
-                "city",
-                "state",
-                "address",
-                "pin_code",
                 "status",
                 "aadhar_limit",
                 "profile",
                 "role",
-                "other_documents"
             ),
         }),
     )
     
 
-admin.site.register(AadharCard)
+admin.site.register(Kyc)
