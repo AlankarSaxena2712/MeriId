@@ -12,4 +12,5 @@ urlpatterns = [
     path("operator-add", AddOperator.as_view(), name="operator-add"),
     path("issue", IssueView.as_view(), name="issue"),
     path("current-status", CurrentUserStatusApi.as_view(), name="current-status"),
+
 ]
