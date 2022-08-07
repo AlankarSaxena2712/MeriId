@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 from ckeditor.fields import RichTextField
+from booking.models import Booking
 
 from services.constants import USER_ROLE, RATING_CHOICES
 
@@ -31,7 +32,8 @@ class Feedback(models.Model):
     """
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    feedback_for = models.ForeignKey(User, on_delete=models.CASCADE, related_name="feedback_for")
+    operator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="operator_feedback", null=True)
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, null=True, blank=True)
     rating = models.IntegerField(choices=RATING_CHOICES)
     feedback = models.TextField()
 
