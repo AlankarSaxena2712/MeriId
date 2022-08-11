@@ -35,7 +35,7 @@ class Feedback(models.Model):
     operator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="operator_feedback", null=True)
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE, null=True, blank=True)
     rating = models.IntegerField(choices=RATING_CHOICES)
-    feedback = models.TextField()
+    description = models.TextField()
 
     def __str__(self):
         return str(self.uuid)

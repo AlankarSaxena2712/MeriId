@@ -34,10 +34,16 @@ class UserSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class UserSetKycTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['kyc_status']
+
+
 class KycSerializer(serializers.ModelSerializer):
     class Meta:
         model = Kyc
-        fields = "__all__"
+        exclude = ('user', )
 
 
 class OperatorAddSerializer(serializers.ModelSerializer):

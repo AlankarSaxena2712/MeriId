@@ -1,6 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import Group
+
 from users.models import *
+
+from rest_framework.authtoken.models import Token 
 
 # Register your models here.
 
@@ -14,6 +18,7 @@ class UserAdmin(BaseUserAdmin):
                 "phone_number",
                 "name",
                 "status",
+                "kyc_status",
                 "aadhar_limit",
                 "profile",
                 "role",
@@ -23,3 +28,6 @@ class UserAdmin(BaseUserAdmin):
     
 
 admin.site.register(Kyc)
+admin.site.register(Token)
+
+admin.site.unregister(Group)

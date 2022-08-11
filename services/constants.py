@@ -9,18 +9,25 @@ RATING_CHOICES = (
     (3, '3'),
     (4, '4'),
     (5, '5'),
-    (6, '6'),
-    (7, '7'),
-    (8, '8'),
-    (9, '9'),
-    (10, '10'),
 )
 
 USER_STATUS = (
     ('active', 'Active'),
-    ('inactive', 'Inactive'),
-    ('blocked', 'Blocked'),
-    ('aadhar', 'Aadhar'),
+    ('kyc', 'Kyc'),
+    ('other', 'Other'),
     ('pan', 'Pan'),
+    ('aadhar', 'Aadhar'),
     ('video', 'Video'),
+    ('pending', "Pending"),
+)
+
+BOOKING_STATUS = (
+    ('pending', 'pending'),
+    ('accepted', 'accepted'),
+    ('rejected', 'rejected'),
+)
+
+ATTENDANCE_STATUS = (
+    ('present', 'present'),
+    ('absent', 'absent'),
 )

@@ -8,9 +8,9 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from services.response import create_response, success_response, bad_request_response
 from services.twillio import send_twilio_message
 from services.utility import create_otp, create_token
-from users.models import Issue
+from users.models import Issue, Kyc
 
-from users.serializers import AdminLoginSerializer, LoginSerializer, OperatorAddSerializer, OtpSendSerializer, UserSerializer, KycSerializer, IssueSerializer, UserStatusSerializer
+from users.serializers import AdminLoginSerializer, LoginSerializer, OperatorAddSerializer, OtpSendSerializer, UserSerializer, KycSerializer, IssueSerializer, UserSetKycTypeSerializer, UserStatusSerializer
 
 User = get_user_model()
 
@@ -177,3 +177,67 @@ class CurrentUserStatusApi(generics.RetrieveAPIView):
     def get(self, request, *args, **kwargs):
         serializer = self.get_serializer(request.user)
         return success_response(serializer.data)
+
+
+@permission_classes((IsAuthenticated, ))
+class UserSetKycTypeApi(generics.CreateAPIView):
+    serializer_class = UserSetKycTypeSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(request.user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return success_response(serializer.data)
+        return bad_request_response(serializer.errors)
+
+
+@permission_classes((IsAuthenticated, ))
+class KycView(generics.CreateAPIView):
+    serializer_class = KycSerializer
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        kyc = Kyc.objects.filter(user=request.user)
+        user = User.objects.get(id=request.user.id)
+        if len(kyc) > 0:
+            if user.kyc_status == False:
+                if data["aadhar_card"] is not None:
+                    kyc.update(aadhar_card=data["aadhar_card"])
+                    user.status = "video"
+                    user.save()
+                elif data["video_link"] is not None:
+                    kyc.update(video_link=data["video_link"])
+                    user.status = "pending"
+                    user.save()
+            else:
+                if data["video_link"] is not None:
+                    kyc.update(video_link=data["video_link"])
+                    user.status = "pending"
+                    user.save()
+        else:
+            if user.kyc_status == False:
+                if data["pan_card"] is not None:
+                    new_kyc = Kyc(
+                        user=user,
+                        aadhar_card=None,
+                        pan_card=data["pan_card"],
+                        other_documents=None,
+                        video_link=None
+                    )
+                    user.kyc_status = False
+                    user.status = "aadhar"
+                    user.save()
+            else:
+                if data["other_documents"] is not None:
+                    new_kyc = Kyc(
+                        user=user,
+                        aadhar_card=None,
+                        pan_card=None,
+                        other_documents=data["other_documents"],
+                        video_link=None
+                    )
+                    user.kyc_status = True
+                    user.status = "video"
+                    user.save()
+            new_kyc.save()
+        return success_response({"message": "Kyc added successfully"})
