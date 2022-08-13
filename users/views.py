@@ -113,6 +113,32 @@ class OperatorList(generics.RetrieveAPIView):
 
 
 @permission_classes((IsAuthenticated, ))
+class OperatorUpdateView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = OperatorAddSerializer
+
+    def get_object(self):
+        return get_object_or_404(User, uuid=self.kwargs['uuid'])
+
+    def get(self, request, *args, **kwargs):
+        user = self.get_object()
+        serializer = self.get_serializer(user)
+        return success_response(serializer.data)
+
+    def patch(self, request, *args, **kwargs):
+        user = self.get_object()
+        serializer = self.get_serializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return success_response(serializer.data)
+        return bad_request_response(serializer.errors)
+
+    def delete(self, request, *args, **kwargs):
+        user = self.get_object()
+        user.delete()
+        return success_response({"message": "User deleted successfully"})
+
+
+@permission_classes((IsAuthenticated, ))
 class UserList(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
