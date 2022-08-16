@@ -15,4 +15,5 @@ urlpatterns = [
     path("current-status", CurrentUserStatusApi.as_view(), name="current-status"),
     path("kyc/type", UserSetKycTypeApi.as_view(), name="kyc-type"),
     path("kyc/docs", KycView.as_view(), name="kyc-docs"),
+    path("attendance", AttendanceView.as_view(), name="attendance"),
 ]

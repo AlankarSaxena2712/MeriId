@@ -24,9 +24,10 @@ class AdminLoginSerializer(serializers.Serializer):
 
 class OtpSendSerializer(serializers.Serializer):
     phone_number = serializers.CharField(required=True, max_length=10)
+    role = serializers.CharField(required=True, max_length=10)
 
     class Meta:
-        fields = ['phone_number']
+        fields = ['phone_number', 'role']
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -76,3 +77,9 @@ class UserStatusSerializer(serializers.ModelSerializer):
         fields = [
             "status",
         ]
+
+
+class AttendanceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Attendance
+        fields = "__all__"

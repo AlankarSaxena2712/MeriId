@@ -8,9 +8,9 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from services.response import create_response, success_response, bad_request_response
 from services.twillio import send_twilio_message
 from services.utility import create_otp, create_token
-from users.models import Issue, Kyc
+from users.models import Attendance, Issue, Kyc
 
-from users.serializers import AdminLoginSerializer, LoginSerializer, OperatorAddSerializer, OtpSendSerializer, UserSerializer, KycSerializer, IssueSerializer, UserSetKycTypeSerializer, UserStatusSerializer
+from users.serializers import AdminLoginSerializer, AttendanceSerializer, LoginSerializer, OperatorAddSerializer, OtpSendSerializer, UserSerializer, KycSerializer, IssueSerializer, UserSetKycTypeSerializer, UserStatusSerializer
 
 User = get_user_model()
 
@@ -23,15 +23,22 @@ class SendOtp(generics.CreateAPIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             phone_number = serializer.validated_data['phone_number']
+            role = serializer.validated_data['role']
             user = User.objects.filter(phone_number=phone_number).first()
-            if user:
-                otp = create_otp()
-                user.set_password(otp)
-                user.save()
-            else:
-                otp = create_otp()
-                new_user = User.objects.create_user(username=phone_number, phone_number=phone_number, password=otp)
-                new_user.save()
+            if role == "operator":
+                if user:
+                    otp = create_otp()
+                    user.set_password(otp)
+                    user.save()
+            elif role == "user":
+                if user:
+                    otp = create_otp()
+                    user.set_password(otp)
+                    user.save()
+                else:
+                    otp = create_otp()
+                    new_user = User.objects.create_user(username=phone_number, phone_number=phone_number, password=otp)
+                    new_user.save()
             send_twilio_message(phone_number, otp)
             return success_response({'message': "success"})
         return bad_request_response(serializer.errors)
@@ -267,3 +274,34 @@ class KycView(generics.CreateAPIView):
                     user.save()
             new_kyc.save()
         return success_response({"message": "Kyc added successfully"})
+
+
+@permission_classes((IsAuthenticated, ))
+class AttendanceView(generics.CreateAPIView):
+    serializer_class = AttendanceSerializer
+
+    def get(self, request, *args, **kwargs):
+        date_from = request.GET.get("date_from")
+        date_to = request.GET.get("date_to")
+        attendance = Attendance.objects.filter(user=request.user, date__range=[date_from, date_to])
+        serializer = self.get_serializer(attendance, many=True)
+        return success_response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        date = data["date"]
+        punch_in = data["punch_in"]
+        try:
+            attendance = Attendance.objects.get(user=request.user, date=date)
+            attendance.punch_in = punch_in
+            attendance.status = "present"
+            attendance.save()
+        except Attendance.DoesNotExist:
+            attendance = Attendance(
+                user=request.user,
+                date=date,
+                punch_in=punch_in,
+                status="present"
+            )
+            attendance.save()
+        return success_response({"message": "Attendance added successfully"})

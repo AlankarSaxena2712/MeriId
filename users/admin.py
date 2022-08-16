@@ -31,5 +31,6 @@ class UserAdmin(BaseUserAdmin):
 admin.site.register(Kyc)
 admin.site.register(Token)
 admin.site.register(Address)
+admin.site.register(Attendance)
 
 admin.site.unregister(Group)
