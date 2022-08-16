@@ -10,7 +10,7 @@ coreapi==2.3.3
 coreschema==0.0.4
 cryptography==2.8
 dbus-python==1.2.16
-defer==1.0.6
+defer==1.0.4
 distlib==0.3.4
 distro==1.4.0
 distro-info===0.23ubuntu1
