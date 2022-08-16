@@ -23,7 +23,6 @@ django-jet-reboot==1.3.1
 django-js-asset==2.0.0
 django-rest-swagger==2.2.0
 djangorestframework==3.13.1
-duplicity==0.8.12.1612
 entrypoints==0.3
 fasteners==0.14.1
 filelock==3.6.0
