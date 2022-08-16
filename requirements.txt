@@ -6,7 +6,6 @@ chardet==3.0.4
 charset-normalizer==2.0.12
 Click==7.0
 colorama==0.4.3
-command-not-found==0.3
 coreapi==2.3.3
 coreschema==0.0.4
 cryptography==2.8
