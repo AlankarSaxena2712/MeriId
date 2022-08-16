@@ -1,5 +1,7 @@
+import csv
+
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, HttpResponse
 
 from rest_framework import generics
 from rest_framework.decorators import permission_classes
@@ -305,3 +307,28 @@ class AttendanceView(generics.CreateAPIView):
             )
             attendance.save()
         return success_response({"message": "Attendance added successfully"})
+
+
+@permission_classes((IsAuthenticated, ))
+class DownloadAttendanceView(generics.RetrieveAPIView):
+    serializer_class = AttendanceSerializer
+
+    def get(self, request, *args, **kwargs):
+        date_from = request.GET.get("date_from")
+        date_to = request.GET.get("date_to")
+        operator_uuid = request.GET.get("operator")
+        try:
+            operator = User.objects.get(uuid=operator_uuid)
+            attendance = Attendance.objects.filter(user=operator, date__range=[date_from, date_to])
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = f'attachment; filename="attendance-{operator.name}-{date_from}-{date_to}.csv"'
+            writer = csv.writer(response)
+            writer.writerow(['User', 'Date', 'Punch In', 'Punch Out', 'Status'])
+            for a in attendance:
+                writer.writerow([a.user.name, a.date, a.punch_in, a.punch_out, a.status])
+            return response
+        except User.DoesNotExist:
+            return bad_request_response({"message": "Operator not found"})
+        except Exception as e:
+            return bad_request_response({"message": str(e)})
+

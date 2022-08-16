@@ -62,6 +62,7 @@ AUTH_USER_MODEL = 'users.User'
 # Application definition
 
 INSTALLED_APPS = [
+    'django_crontab',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -201,5 +202,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 TWILIO_ACCOUNT_SID = 'AC9ee758db1967629137b5bc0813289135'
 TWILIO_AUTH_TOKEN = 'b602dc604a722721b9ba8302ea63d93b'
 TWILIO_PHONE_NUMBER = '+12517582264'
+
+CRONJOBS = [
+    ('*/1 * * * * ', 'users.cron.my_scheduled_job')
+]
 
 django_heroku.settings(locals())
