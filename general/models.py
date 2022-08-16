@@ -16,11 +16,11 @@ class Guidelines(models.Model):
     Guidelines model
     """
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    guideline = models.TextField()
-    user_type = models.CharField(max_length=30, choices=USER_ROLE)
+    guideline = RichTextField()
+    user_type = models.CharField(max_length=30, choices=USER_ROLE, unique=True)
 
     def __str__(self):
-        return str(self.uuid)
+        return self.user_type
 
     class Meta:
         verbose_name_plural = "Guidelines"

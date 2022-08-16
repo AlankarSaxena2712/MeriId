@@ -189,9 +189,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'staticfiles'),
-# ]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'staticfiles'),
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -202,4 +202,4 @@ TWILIO_ACCOUNT_SID = 'AC44d558f2e84b5f2e29697c63c183413e'
 TWILIO_AUTH_TOKEN = '6f1d934efe0e7ac4d4e7c05b7dc03652'
 TWILIO_PHONE_NUMBER = '+14405956776'
 
-django_heroku.settings(locals())
+# django_heroku.settings(locals())

@@ -15,7 +15,8 @@ class GuidelinesView(generics.RetrieveAPIView):
     serializer_class = GuidelinesSerializer
 
     def get(self, request, *args, **kwargs):
-        serializer = self.get_serializer(Guidelines.objects.all(), many=True)
+        role = request.GET.get('role')
+        serializer = self.get_serializer(Guidelines.objects.filter(user_type=role), many=True)
         return success_response(serializer.data)
 
 

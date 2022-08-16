@@ -5,6 +5,20 @@ from django.contrib.auth.models import AbstractUser
 from services.constants import ATTENDANCE_STATUS, USER_ROLE, USER_STATUS
 
 
+class Address(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    address_line_1 = models.CharField(max_length=255, blank=True, null=True)
+    address_line_2 = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    pincode = models.CharField(max_length=6)
+    latitude = models.CharField(max_length=100, blank=True, null=True)
+    longitude = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.address_line_1
+
+
 class User(AbstractUser):
     """
     User model
@@ -17,6 +31,7 @@ class User(AbstractUser):
     aadhar_limit = models.IntegerField(default=5)
     profile = models.URLField(max_length=255, blank=True, null=True)
     role = models.CharField(max_length=30, choices=USER_ROLE, default='user')
+    address = models.OneToOneField(Address, on_delete=models.CASCADE, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if len(self.phone_number) == 10:
@@ -28,7 +43,7 @@ class User(AbstractUser):
         super(User, self).save(*args, **kwargs)
 
     def __str__(self):
-        return str(self.uuid)
+        return self.name + " - " + self.role
 
 
 class Kyc(models.Model):
@@ -54,7 +69,7 @@ class Issue(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False ,  unique=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
-    issue = models.TextField()
+    description = models.TextField()
 
     def __str__(self):
         return str(self.uuid)
@@ -69,6 +84,14 @@ class Attendace(models.Model):
     punch_in = models.TimeField()
     punch_out = models.TimeField()
     status = models.CharField(max_length=255, choices=ATTENDANCE_STATUS, default='absent')
+    slot_10_to_11 = models.BooleanField(default=False, help_text="False if operator is busy in this slot else True")
+    slot_11_to_12 = models.BooleanField(default=False, help_text="False if operator is busy in this slot else True")
+    slot_12_to_1 = models.BooleanField(default=False, help_text="False if operator is busy in this slot else True")
+    slot_1_to_2 = models.BooleanField(default=False, help_text="False if operator is busy in this slot else True")
+    slot_2_to_3 = models.BooleanField(default=False, help_text="False if operator is busy in this slot else True")
+    slot_3_to_4 = models.BooleanField(default=False, help_text="False if operator is busy in this slot else True")
+    slot_4_to_5 = models.BooleanField(default=False, help_text="False if operator is busy in this slot else True")
+    slot_5_to_6 = models.BooleanField(default=False, help_text="False if operator is busy in this slot else True")
 
     def __str__(self):
         return str(self.user)

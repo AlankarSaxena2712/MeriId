@@ -22,6 +22,7 @@ class UserAdmin(BaseUserAdmin):
                 "aadhar_limit",
                 "profile",
                 "role",
+                "address",
             ),
         }),
     )
@@ -29,5 +30,6 @@ class UserAdmin(BaseUserAdmin):
 
 admin.site.register(Kyc)
 admin.site.register(Token)
+admin.site.register(Address)
 
 admin.site.unregister(Group)
