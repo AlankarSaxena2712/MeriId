@@ -202,4 +202,4 @@ TWILIO_ACCOUNT_SID = 'AC9ee758db1967629137b5bc0813289135'
 TWILIO_AUTH_TOKEN = 'b602dc604a722721b9ba8302ea63d93b'
 TWILIO_PHONE_NUMBER = '+12517582264'
 
-# django_heroku.settings(locals())
+django_heroku.settings(locals())
