@@ -15,6 +15,7 @@ class UserAdmin(BaseUserAdmin):
             "fields": (
                 "username",
                 "password",
+                "email",
                 "phone_number",
                 "name",
                 "status",
