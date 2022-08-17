@@ -27,18 +27,16 @@ class SendOtp(generics.CreateAPIView):
             phone_number = serializer.validated_data['phone_number']
             role = serializer.validated_data['role']
             user = User.objects.filter(phone_number=phone_number).first()
+            otp = create_otp()
             if role == "operator":
                 if user:
-                    otp = create_otp()
                     user.set_password(otp)
                     user.save()
             elif role == "user":
                 if user:
-                    otp = create_otp()
                     user.set_password(otp)
                     user.save()
                 else:
-                    otp = create_otp()
                     new_user = User.objects.create_user(username=phone_number, phone_number=phone_number, password=otp)
                     new_user.save()
             send_twilio_message(phone_number, otp)
