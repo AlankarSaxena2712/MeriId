@@ -12,7 +12,6 @@ class Friend(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=10)
-    email = models.EmailField(max_length=255, blank=True, null=True)
     reason = models.TextField(blank=True, null=True)
 
     def __str__(self):
