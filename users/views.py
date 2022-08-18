@@ -311,6 +311,23 @@ class AttendanceView(generics.CreateAPIView):
 
 
 @permission_classes((IsAuthenticated, ))
+class AttendancePunchOutView(generics.CreateAPIView):
+    serializer_class = AttendanceSerializer
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        date = data["date"]
+        punch_out = data["punch_out"]
+        try:
+            attendance = Attendance.objects.get(user=request.user, date=date)
+            attendance.punch_out = punch_out
+            attendance.save()
+        except Attendance.DoesNotExist:
+            return bad_request_response({"message": "Attendance not found"})
+        return success_response({"message": "Attendance added successfully"})
+
+
+@permission_classes((IsAuthenticated, ))
 class DownloadAttendanceView(generics.RetrieveAPIView):
     serializer_class = AttendanceSerializer
 
@@ -332,4 +349,13 @@ class DownloadAttendanceView(generics.RetrieveAPIView):
             return bad_request_response({"message": "Operator not found"})
         except Exception as e:
             return bad_request_response({"message": str(e)})
+
+
+def send_noti(request):
+    from firebase_admin.messaging import Message, Notification
+    Message(
+        notification=Notification(title="title", body="text", image="url"),
+        topic="Optional topic parameter: Whatever you want",
+    )
+    return HttpResponse("ok")
 

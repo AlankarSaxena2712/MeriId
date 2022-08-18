@@ -16,4 +16,6 @@ urlpatterns = [
     path("kyc/type", UserSetKycTypeApi.as_view(), name="kyc-type"),
     path("kyc/docs", KycView.as_view(), name="kyc-docs"),
     path("attendance", AttendanceView.as_view(), name="attendance"),
+    path("attendance/punch-out", AttendancePunchOutView.as_view(), name="attendance-punch-out"),
+    path("send-noti", send_noti, name="send-noti"),
 ]
