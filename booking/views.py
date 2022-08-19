@@ -99,7 +99,8 @@ class OrderOtpSendAPI(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         try:
             data = request.data
-            order = Order.objects.get(booking_id=data['booking_id'])
+            booking = Booking.objects.get(booking_id=data['booking_id'])
+            order = Order.objects.get(booking=booking)
             otp = create_otp()
             phone = order.booking.user.phone_number
             order.otp = otp
