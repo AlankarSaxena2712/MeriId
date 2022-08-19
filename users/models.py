@@ -16,7 +16,7 @@ class Address(models.Model):
     longitude = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
-        return self.address_line_1
+        return str(self.address_line_1)
 
 
 class User(AbstractUser):
@@ -62,7 +62,7 @@ class Kyc(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.user)
+        return str(self.user.name)
 
 
 class Issue(models.Model):
@@ -98,4 +98,4 @@ class Attendance(models.Model):
     slot_5_to_6 = models.BooleanField(default=False, help_text="False if operator is busy in this slot else True")
 
     def __str__(self):
-        return str(self.user)
+        return str(self.user.name)

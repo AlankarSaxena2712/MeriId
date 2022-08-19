@@ -33,7 +33,7 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return str(self.booking.booking_id)
+        return f"{self.booking.booking_id}"
 
 
 
@@ -59,11 +59,8 @@ class Booking(models.Model):
     def save(self, *args, **kwargs):
         super(Booking, self).save(*args, **kwargs)
         if self.booking_status == "completed":
-            print("completed")
             address = UIDAI_address()
-            print(address)
             booking = Booking.objects.get(uuid=self.uuid)
-            print(booking)
             order = Order(
                 booking=booking,
                 address=address
@@ -72,4 +69,4 @@ class Booking(models.Model):
             super(Booking, self).save(*args, **kwargs)
 
     def __str__(self):
-        return str(self.uuid)
+        return f"{self.uuid}"
