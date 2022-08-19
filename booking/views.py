@@ -3,11 +3,13 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import generics
 from rest_framework.decorators import permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from booking.models import Booking, Friend
+from booking.models import Booking, Friend, Order
 from booking.serializers import BookingSerializer
 from services.response import create_response, success_response, bad_request_response
+from services.twillio import send_twilio_message
+from services.utility import create_otp
 from users.models import Address
 
 User = get_user_model()
@@ -85,5 +87,61 @@ class OperatorBookingLocationView(generics.RetrieveAPIView):
         response['booking']['lat'] = bking.address.latitude
         response['booking']['lng'] = bking.address.longitude
         return success_response(response)
+
+
+@permission_classes((AllowAny, ))
+class OrderOtpSendAPI(generics.RetrieveAPIView, generics.CreateAPIView):
+    """
+    Retrieve order
+    """
+    serializer_class = BookingSerializer
+
+    def post(self, request, *args, **kwargs):
+        try:
+            data = request.data
+            order = Order.objects.get(booking_id=data['booking_id'])
+            otp = create_otp()
+            phone = order.booking.user.phone_number
+            order.otp = otp
+            order.save()
+            send_twilio_message(phone, otp)
+            return create_response({'message': 'Otp send'})
+        except Exception as e:
+            return bad_request_response(str(e))
+
+
+@permission_classes((AllowAny, ))
+class OrderOtpVerifyAPI(generics.CreateAPIView):
+    """
+    Retrieve order
+    """
+    serializer_class = BookingSerializer
+
+    def post(self, request, *args, **kwargs):
+        try:
+            data = request.data
+            order = Order.objects.get(booking_id=data['booking_id'])
+            if order.otp == data['otp']:
+                response = {
+                    "order_address": {
+                        "address_line_1": order.address.address_line_1,
+                        "address_line_2": order.address.address_line_2,
+                        "city": order.address.city,
+                        "state": order.address.state,
+                        "pincode": order.address.pincode
+                    },
+                    "booking_address": {
+                        "address_line_1": order.booking.address.address_line_1,
+                        "address_line_2": order.booking.address.address_line_2,
+                        "city": order.booking.address.city,
+                        "state": order.booking.address.state,
+                        "pincode": order.booking.address.pincode
+                    },
+                }
+                return success_response(response)
+            else:
+                return bad_request_response('Otp not verified')
+        except Exception as e:
+            return bad_request_response(str(e))
 
 

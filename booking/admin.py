@@ -4,3 +4,4 @@ from booking.models import *
 
 admin.site.register(Booking)
 admin.site.register(Friend)
+admin.site.register(Order)

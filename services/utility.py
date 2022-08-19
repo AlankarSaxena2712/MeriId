@@ -3,6 +3,8 @@ import random
 from django.contrib import auth
 from rest_framework.authtoken.models import Token
 
+from users.models import Address
+
 
 def create_token(username, password):
     user = auth.authenticate(username=username, password=password)
@@ -13,3 +15,23 @@ def create_token(username, password):
 
 def create_otp():
     return ''.join(random.choice('0123456789') for i in range(6))
+
+def create_booking_id():
+    return "BOOK" + ''.join(random.choice('0123456789') for i in range(10))
+
+def UIDAI_address():
+    try:
+        address = Address.objects.get(address_line_1='UIDAI Office')
+        return address
+    except Exception as e:
+        address = Address(
+            address_line_1="UIDAI Office",
+            address_line_2="Ground, Pragati Maidan",
+            city="New Delhi",
+            state="Delhi",
+            pincode="110001",
+            latitude="Latitude",
+            longitude="Longitude"
+        )
+        address.save()
+        return address

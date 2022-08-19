@@ -1,8 +1,10 @@
+from pyexpat import model
 import uuid as uuid
 from django.contrib.auth import get_user_model
 from django.db import models
 
 from services.constants import BOOKING_SLOT_TIME, BOOKING_STATUS, BOOKING_TYPE
+from services.utility import UIDAI_address, create_booking_id
 from users.models import Address
 
 User = get_user_model()
@@ -17,12 +19,30 @@ class Friend(models.Model):
     def __str__(self):
         return self.name
 
-# Create your models here.
+
+class Order(models.Model):
+    """
+    bookin model
+    """
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    booking = models.OneToOneField("booking.Booking", on_delete=models.CASCADE, blank=True, null=True)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, blank=True, null=True, related_name='order_address')
+    otp = models.CharField(max_length=6, blank=True, null=True)
+
+    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.booking.booking_id)
+
+
+
 class Booking(models.Model):
     """
     bookin model
     """
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    booking_id = models.CharField(max_length=255, default=create_booking_id)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     friends = models.ManyToManyField(Friend)
     slot_date = models.DateField(null=True)
@@ -36,20 +56,20 @@ class Booking(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        super(Booking, self).save(*args, **kwargs)
+        if self.booking_status == "completed":
+            print("completed")
+            address = UIDAI_address()
+            print(address)
+            booking = Booking.objects.get(uuid=self.uuid)
+            print(booking)
+            order = Order(
+                booking=booking,
+                address=address
+            )
+            order.save()
+            super(Booking, self).save(*args, **kwargs)
+
     def __str__(self):
         return str(self.uuid)
-
-
-class Order(models.Model):
-    """
-    bookin model
-    """
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    address = models.OneToOneField(Address, on_delete=models.CASCADE, blank=True, null=True)
-    booking = models.OneToOneField(Address, on_delete=models.CASCADE, blank=True, null=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return str(self.id)
