@@ -176,7 +176,7 @@ class AddOperator(generics.CreateAPIView):
             address = Address(
                 state=data["state"],
                 city=data["city"],
-                pin_code=data["pin_code"]
+                pincode=data["pin_code"]
             )
             address.save()
             new_user = User.objects.create_user(
