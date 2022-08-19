@@ -10,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from services.response import create_response, success_response, bad_request_response
 from services.twillio import send_twilio_message
 from services.utility import create_otp, create_token
-from users.models import Attendance, Issue, Kyc
+from users.models import Address, Attendance, Issue, Kyc
 
 from users.serializers import AdminLoginSerializer, AttendanceSerializer, LoginSerializer, OperatorAddSerializer, OtpSendSerializer, UserSerializer, KycSerializer, IssueSerializer, UserSetKycTypeSerializer, UserStatusSerializer
 
@@ -173,6 +173,12 @@ class AddOperator(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             data = request.data
+            address = Address(
+                state=data["state"],
+                city=data["city"],
+                pin_code=data["pin_code"]
+            )
+            address.save()
             new_user = User.objects.create_user(
                 username=data["phone_number"],
                 phone_number=data["phone_number"],
@@ -180,9 +186,7 @@ class AddOperator(generics.CreateAPIView):
                 email=data["email"],
                 password="1234",
                 role="operator",
-                state=data["state"],
-                city=data["city"],
-                pin_code=data["pin_code"],
+                address=address
             )
             new_user.save()
             return success_response({"message": "Operator added successfully"})
