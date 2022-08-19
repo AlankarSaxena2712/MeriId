@@ -90,7 +90,7 @@ class OperatorBookingLocationView(generics.RetrieveAPIView):
 
 
 @permission_classes((AllowAny, ))
-class OrderOtpSendAPI(generics.RetrieveAPIView, generics.CreateAPIView):
+class OrderOtpSendAPI(generics.CreateAPIView):
     """
     Retrieve order
     """
