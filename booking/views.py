@@ -121,7 +121,8 @@ class OrderOtpVerifyAPI(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         try:
             data = request.data
-            order = Order.objects.get(booking_id=data['booking_id'])
+            booking = Booking.objects.get(booking_id=data['booking_id'])
+            order = Order.objects.get(booking=booking)
             if order.otp == data['otp']:
                 response = {
                     "order_address": {
