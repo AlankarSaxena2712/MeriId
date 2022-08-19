@@ -38,3 +38,18 @@ class Booking(models.Model):
 
     def __str__(self):
         return str(self.uuid)
+
+
+class Order(models.Model):
+    """
+    bookin model
+    """
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    address = models.OneToOneField(Address, on_delete=models.CASCADE, blank=True, null=True)
+    booking = models.OneToOneField(Address, on_delete=models.CASCADE, blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.id)
