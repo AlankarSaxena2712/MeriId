@@ -46,7 +46,7 @@ class User(AbstractUser):
         super(User, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.name + " - " + self.role
+        return f"{self.name} - {self.role}"
 
 
 class Kyc(models.Model):

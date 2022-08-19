@@ -114,7 +114,7 @@ class OperatorList(generics.RetrieveAPIView):
         response = []
         for user in users:
             response.append({
-                "id": user.id,
+                "id": user.uuid,
                 "name": user.name,
                 "email": user.email,
                 "phone_number": user.phone_number,
