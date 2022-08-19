@@ -111,8 +111,18 @@ class OperatorList(generics.RetrieveAPIView):
 
     def get(self, request, *args, **kwargs):
         users = User.objects.filter(role='operator')
-        serializer = self.get_serializer(users, many=True)
-        return success_response(serializer.data)
+        response = []
+        for user in users:
+            response.append({
+                "id": user.id,
+                "name": user.name,
+                "email": user.email,
+                "phone_number": user.phone_number,
+                "city": user.address.city,
+                "state": user.address.state,
+                "pin_code": user.address.pincode,
+            })
+        return success_response(response)
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
