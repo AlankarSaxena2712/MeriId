@@ -56,3 +56,4 @@ class NoticeView(generics.RetrieveAPIView, generics.CreateAPIView):
             serializer.save()
             return success_response(serializer.data)
         return bad_request_response(serializer.errors)
+
