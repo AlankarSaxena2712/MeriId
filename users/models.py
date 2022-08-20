@@ -1,10 +1,12 @@
+import time
 import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from services.constants import ATTENDANCE_STATUS, USER_ROLE, USER_STATUS
-from services.utility import create_user_id
 
 
+def create_user_id():
+    return "OP" + str(round(time.time() * 1000))
 class Address(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     address_line_1 = models.CharField(max_length=255, blank=True, null=True)
@@ -24,7 +26,7 @@ class User(AbstractUser):
     User model
     """
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name='UUID')
-    user_id = models.CharField(max_length=255, default=create_user_id)
+    user_id = models.CharField(max_length=255, blank=True, null=True)
     name = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=10, unique=True)
     status = models.CharField(max_length=255, choices=USER_STATUS, default="kyc")
@@ -43,6 +45,7 @@ class User(AbstractUser):
             else:
                 self.status = "pan"
         elif self.role == 'operator':
+            self.user_id = create_user_id()
             self.status = "active"
         super(User, self).save(*args, **kwargs)
 

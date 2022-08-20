@@ -20,8 +20,6 @@ def create_otp():
 def create_booking_id():
     return "BOOK" + str(round(time.time() * 1000))
 
-def create_user_id():
-    return "OP" + str(round(time.time() * 1000))
 def UIDAI_address():
     try:
         address = Address.objects.get(address_line_1='UIDAI Office')
