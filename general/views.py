@@ -28,7 +28,8 @@ class FeedbackView(generics.RetrieveAPIView, generics.CreateAPIView):
     serializer_class = FeedbackSerializer
 
     def get(self, request, *args, **kwargs):
-        serializer = self.get_serializer(Feedback.objects.all(), many=True)
+        operator = request.GET.get('operator')
+        serializer = self.get_serializer(Feedback.objects.filter(operator=operator), many=True)
         return success_response(serializer.data)
 
     def post(self, request, *args, **kwargs):
