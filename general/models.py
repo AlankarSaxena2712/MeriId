@@ -37,6 +37,8 @@ class Feedback(models.Model):
     rating = models.IntegerField(choices=RATING_CHOICES)
     description = models.TextField()
 
+    created_at = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return str(self.uuid)
 
