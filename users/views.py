@@ -300,7 +300,9 @@ class AttendanceView(generics.CreateAPIView):
     def get(self, request, *args, **kwargs):
         date_from = request.GET.get("date_from")
         date_to = request.GET.get("date_to")
-        attendance = Attendance.objects.filter(user=request.user, date__range=[date_from, date_to])
+        operator = request.GET.get("operator")
+        op = User.objects.get(uuid=operator)
+        attendance = Attendance.objects.filter(user=op, date__range=[date_from, date_to])
         serializer = self.get_serializer(attendance, many=True)
         return success_response(serializer.data)
 
