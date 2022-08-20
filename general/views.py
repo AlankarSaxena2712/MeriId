@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from general.models import Feedback, Guidelines, Notice
 from general.serializers import FeedbackSerializer, GuidelinesSerializer, NoticeSerializer
 from services.response import success_response, bad_request_response
+from users.models import User
 
 
 @permission_classes((AllowAny, ))
@@ -29,7 +30,8 @@ class FeedbackView(generics.RetrieveAPIView, generics.CreateAPIView):
 
     def get(self, request, *args, **kwargs):
         operator = request.GET.get('operator')
-        serializer = self.get_serializer(Feedback.objects.filter(operator=operator), many=True)
+        oper = User.objects.get(uuid=operator)
+        serializer = self.get_serializer(Feedback.objects.filter(operator=oper), many=True)
         return success_response(serializer.data)
 
     def post(self, request, *args, **kwargs):
