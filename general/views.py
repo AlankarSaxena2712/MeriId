@@ -31,8 +31,19 @@ class FeedbackView(generics.RetrieveAPIView, generics.CreateAPIView):
     def get(self, request, *args, **kwargs):
         operator = request.GET.get('operator')
         oper = User.objects.get(uuid=operator)
-        serializer = self.get_serializer(Feedback.objects.filter(operator=oper), many=True)
-        return success_response(serializer.data)
+        feedbacks = Feedback.objects.filter(operator=oper)
+        response = []
+        for feedback in feedbacks:
+            rating = [0 for x in range(feedback.rating)]
+            response.append({
+                'uuid': feedback.uuid,
+                'name': feedback.user.name,
+                'booking_id': feedback.booking.booking_id,
+                'description': feedback.description,
+                'rating': rating,
+                'created_at': feedback.created_at,
+            })
+        return success_response(response)
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
