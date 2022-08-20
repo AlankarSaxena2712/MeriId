@@ -375,3 +375,50 @@ def send_noti(request):
     )
     return HttpResponse("ok")
 
+
+@permission_classes((IsAuthenticated, ))
+class AdminWiseOperatorListView(generics.RetrieveAPIView):
+    serializer_class = UserSerializer
+
+    def get(self, request, *args, **kwargs):
+        admin = request.user
+        pincodes = admin.pincodes.values_list("pincode", flat=True)
+        operators = User.objects.filter(address__pincode__in=pincodes, role="operator")
+        response = []
+        for operator in operators:
+            response.append({
+                "id": operator.id,
+                "name": operator.name,
+                "uuid": operator.uuid,
+                "operator_id": operator.user_id,
+            })
+        return success_response(response)
+
+
+@permission_classes((IsAuthenticated, ))
+class OperatorWiseTimeSlotsApiView(generics.RetrieveAPIView):
+    serializer_class = UserSerializer
+
+    def get(self, request, *args, **kwargs):
+        operator = User.objects.get(uuid=kwargs["uuid"])
+        date = request.GET.get("date")
+        attendance = Attendance.objects.get(user=operator, date=date)
+        time_slots = []
+        if attendance.slot_10_to_11 == True:
+            time_slots.append("10:00 AM - 11:00 AM")
+        if attendance.slot_11_to_12 == True:
+            time_slots.append("11:00 AM - 12:00 PM")
+        if attendance.slot_12_to_1 == True:
+            time_slots.append("12:00 PM - 01:00 PM")
+        if attendance.slot_1_to_2 == True:
+            time_slots.append("01:00 PM - 02:00 PM")
+        if attendance.slot_2_to_3 == True:
+            time_slots.append("02:00 PM - 03:00 PM")
+        if attendance.slot_3_to_4 == True:
+            time_slots.append("03:00 PM - 04:00 PM")
+        if attendance.slot_4_to_5 == True:
+            time_slots.append("04:00 PM - 05:00 PM")
+        if attendance.slot_5_to_6 == True:
+            time_slots.append("05:00 PM - 06:00 PM")
+        return success_response(time_slots)
+
