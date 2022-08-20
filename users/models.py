@@ -1,8 +1,8 @@
 import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
 from services.constants import ATTENDANCE_STATUS, USER_ROLE, USER_STATUS
+from services.utility import create_user_id
 
 
 class Address(models.Model):
@@ -24,6 +24,7 @@ class User(AbstractUser):
     User model
     """
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name='UUID')
+    user_id = models.CharField(max_length=255, default=create_user_id)
     name = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=10, unique=True)
     status = models.CharField(max_length=255, choices=USER_STATUS, default="kyc")

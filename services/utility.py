@@ -2,6 +2,7 @@
 import random
 from django.contrib import auth
 from rest_framework.authtoken.models import Token
+import time
 
 from users.models import Address
 
@@ -17,8 +18,10 @@ def create_otp():
     return ''.join(random.choice('0123456789') for i in range(6))
 
 def create_booking_id():
-    return "BOOK" + ''.join(random.choice('0123456789') for i in range(10))
+    return "BOOK" + str(round(time.time() * 1000))
 
+def create_user_id():
+    return "OP" + str(round(time.time() * 1000))
 def UIDAI_address():
     try:
         address = Address.objects.get(address_line_1='UIDAI Office')
