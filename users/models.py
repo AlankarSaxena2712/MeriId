@@ -21,6 +21,13 @@ class Address(models.Model):
         return str(self.address_line_1)
 
 
+class PinCode(models.Model):
+    pincode = models.CharField(max_length=6)
+
+    def __str__(self):
+        return str(self.pincode)
+
+
 class User(AbstractUser):
     """
     User model
@@ -35,6 +42,7 @@ class User(AbstractUser):
     profile = models.URLField(max_length=255, blank=True, null=True)
     role = models.CharField(max_length=30, choices=USER_ROLE, default='user')
     address = models.OneToOneField(Address, on_delete=models.CASCADE, blank=True, null=True)
+    pincodes = models.ManyToManyField(PinCode, blank=True)
 
     def save(self, *args, **kwargs):
         if len(self.phone_number) == 10:

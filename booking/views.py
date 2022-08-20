@@ -146,4 +146,74 @@ class OrderOtpVerifyAPI(generics.CreateAPIView):
         except Exception as e:
             return bad_request_response(str(e))
 
+    
+@permission_classes((IsAuthenticated, ))
+class AdminWiseBookingList(generics.RetrieveAPIView):
+    """
+    Retrieve booking
+    """
+    serializer_class = BookingSerializer
+
+    def get(self, request, *args, **kwargs):
+        try:
+            admin = request.user
+            pincodes = admin.pincodes.values_list('pincode', flat=True)
+            bookings = Booking.objects.filter(address__pincode__in=pincodes)
+            response = []
+            for bking in bookings:
+                res = {}
+                res['uuid'] = bking.uuid
+                res['booking_id'] = bking.booking_id
+                res['slot_date'] = bking.slot_date
+                res['created_at'] = bking.created_at
+                res['name'] = bking.user.name
+                addre = bking.address.address_line_1 + ', ' + bking.address.address_line_2 + ', ' + bking.address.city + ', ' + bking.address.state
+                res['address'] = addre
+                res['pincode'] = bking.address.pincode
+                response.append(res)
+            return success_response(response)
+        except Exception as e:
+            return bad_request_response(str(e))
+
+    
+@permission_classes((IsAuthenticated, ))
+class AdminWiseBookingUpdateApi(generics.RetrieveUpdateAPIView):
+    """
+    Retrieve booking
+    """
+    serializer_class = BookingSerializer
+
+    def get(self, request, *args, **kwargs):
+        try:
+            bookings = Booking.objects.get(booking_id=kwargs.get('booking_id'))
+            response = []
+            for bking in bookings:
+                res = {}
+                res['uuid'] = bking.uuid
+                res['booking_id'] = bking.booking_id
+                res['slot_date'] = bking.slot_date
+                res['created_at'] = bking.created_at
+                res['name'] = bking.user.name
+                addre = bking.address.address_line_1 + ', ' + bking.address.address_line_2 + ', ' + bking.address.city + ', ' + bking.address.state
+                res['address'] = addre
+                res['pincode'] = bking.address.pincode
+                response.append(res)
+            return success_response(response)
+        except Exception as e:
+            return bad_request_response(str(e))
+
+    def put(self, request, *args, **kwargs):
+        try:
+            data = request.data
+            operator = User.objects.get(uuid=data['operator'])
+            time_slot = data["time_slot"]
+            booking = Booking.objects.get(booking_id=data['booking_id'])
+            booking.status = "completed"
+            booking.operator = operator
+            booking.time_slot = time_slot
+            booking.save()
+            return success_response({'message': 'Booking status updated'})
+        except Exception as e:
+            return bad_request_response(str(e))
+
 
