@@ -215,7 +215,7 @@ class AdminWiseBookingUpdateApi(generics.RetrieveUpdateAPIView):
             booking.operator = operator
             booking.slot_time = time_slot
             booking.save()
-            attendance = Attendance.objects.get(user=operator)
+            attendance = Attendance.objects.get(user=operator, date=datetime.now().date())
             if time_slot == "10:00 AM - 11:00 AM":
                 attendance.slot_10_to_11 = True
             elif time_slot == "11:00 AM - 12:00 PM":
