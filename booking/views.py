@@ -257,6 +257,7 @@ class OperatorWiseBooking(generics.RetrieveAPIView):
                 res['booking_id'] = bking.booking_id
                 res['date'] = bking.slot_date
                 res['name'] = bking.user.name
+                res['number'] = bking.user.phone_number
                 addre = bking.address.address_line_1 + ', ' + bking.address.address_line_2 + ', ' + bking.address.city + ', ' + bking.address.state
                 res['address'] = addre
                 res['lat'] = bking.address.latitude
