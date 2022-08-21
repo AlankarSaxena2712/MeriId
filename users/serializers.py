@@ -68,7 +68,12 @@ class OperatorAddSerializer(serializers.ModelSerializer):
 class IssueSerializer(serializers.ModelSerializer):
     class Meta:
         model = Issue
-        fields = "__all__"
+        fields = [
+            "uuid",
+            "title",
+            "description"
+        ]
+        read_only_fields = ["uuid"]
 
 
 class UserStatusSerializer(serializers.ModelSerializer):
