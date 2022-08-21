@@ -265,6 +265,7 @@ class OperatorWiseBooking(generics.RetrieveAPIView):
                 res['no_of_people'] = bking.friends.count()
                 res['pincode'] = bking.address.pincode
                 res['time_slot'] = bking.slot_time
+                res['status'] = bking.booking_status
                 response.append(res)
             return success_response(response)
         except Exception as e:
