@@ -217,3 +217,23 @@ class AdminWiseBookingUpdateApi(generics.RetrieveUpdateAPIView):
             return bad_request_response(str(e))
 
 
+@permission_classes((IsAuthenticated, ))
+class BookingOperatorSlot(generics.RetrieveUpdateAPIView):
+    def get(self, request, *args, **kwargs):
+        try:
+            operator = kwargs['operator']
+            date = request.GET.get("date")
+            oper = User.objects.get(uuid=operator)
+            bookings = Booking.objects.filter(operator=oper, slot_date=date)
+            response = []
+            for booking in bookings:
+                response.append({
+                    "id": booking.booking_id,
+                    "slot": booking.slot_time,
+                    "status": booking.status
+                })
+            return success_response(response)
+        except Exception as e:
+            return bad_request_response(str(e))
+
+
