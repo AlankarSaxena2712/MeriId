@@ -1,4 +1,5 @@
-import uuid
+from datetime import datetime
+
 from django.contrib.auth import get_user_model
 
 from rest_framework import generics
@@ -158,7 +159,7 @@ class AdminWiseBookingList(generics.RetrieveAPIView):
         try:
             admin = request.user
             pincodes = admin.pincodes.values_list('pincode', flat=True)
-            bookings = Booking.objects.filter(address__pincode__in=pincodes)
+            bookings = Booking.objects.filter(address__pincode__in=pincodes, date=datetime.now().date())
             response = []
             for bking in bookings:
                 res = {}
