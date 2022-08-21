@@ -15,6 +15,7 @@ class UserAdmin(BaseUserAdmin):
             "fields": (
                 "username",
                 "user_id",
+                "uuid",
                 "password",
                 "email",
                 "phone_number",
@@ -29,6 +30,7 @@ class UserAdmin(BaseUserAdmin):
             ),
         }),
     )
+    readonly_fields = ("uuid",)
     
 
 admin.site.register(Kyc)

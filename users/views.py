@@ -445,12 +445,11 @@ class OperatorWiseTimeSlotsApiView(generics.RetrieveAPIView):
 @permission_classes((IsAuthenticated,))
 class OperatorLocationView(generics.RetrieveAPIView):
     def get(self, request, *args, **kwargs):
-        uuid = User.objects.get(uuid=kwargs["uuid"])
-        operator = User.objects.get(uuid=uuid, role="operator")
-        status = Attendance.objects.get(user=operator, date=datetime.now().date()).status
+        operator = User.objects.get(uuid=kwargs["uuid"], role="operator")
+        status = Attendance.objects.get(user=operator).status
         response = {
-            "lat": operator.address.latitude,
-            "long": operator.address.longitude,
+            "lat": operator.address.latitude if operator.address else None,
+            "long": operator.address.longitude if operator.address else None,
             "status": status
         }
         return success_response(response)
