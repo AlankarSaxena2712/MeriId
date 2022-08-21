@@ -12,7 +12,7 @@ token = secrets.token_urlsafe(20)
 def start():
     scheduler = BackgroundScheduler()
     scheduler.add_jobstore(DjangoJobStore(), 'AddAttendance') 
-    scheduler.add_job(func=create_attendance_for_next_day, id=f"Attendance {token}", trigger='interval', minutes=2, hours=0, name='attendance', jobstore='AddAttendance')
+    scheduler.add_job(func=create_attendance_for_next_day, id=f"Attendance {token}", trigger='interval', minutes=1442, name='attendance', jobstore='AddAttendance')
     register_events(scheduler)
     scheduler.start()
     print('Geofence Started!!!!', file=sys.stdout)
