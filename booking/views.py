@@ -268,24 +268,26 @@ class OperatorWiseBooking(generics.RetrieveAPIView):
     def get(self, request, *args, **kwargs):
         try:
             operator = request.user
-            bookings = Booking.objects.filter(operator=operator)
+            bookings = Booking.objects.filter(operator=operator).order_by('-booking_id')
+            attendance = Attendance.objects.get(user=operator, date=datetime.now().date())
             response = []
             for bking in bookings:
-                res = {}
-                res['uuid'] = bking.uuid
-                res['booking_id'] = bking.booking_id
-                res['date'] = bking.slot_date
-                res['name'] = bking.user.name
-                res['number'] = bking.user.phone_number
-                addre = bking.address.address_line_1 + ', ' + bking.address.address_line_2 + ', ' + bking.address.city + ', ' + bking.address.state
-                res['address'] = addre
-                res['lat'] = bking.address.latitude
-                res['long'] = bking.address.longitude
-                res['no_of_people'] = bking.friends.count()
-                res['pincode'] = bking.address.pincode
-                res['time_slot'] = bking.slot_time
-                res['status'] = bking.booking_status
-                response.append(res)
+                if attendance.status == "present":
+                    res = {}
+                    res['uuid'] = bking.uuid
+                    res['booking_id'] = bking.booking_id
+                    res['date'] = bking.slot_date
+                    res['name'] = bking.user.name
+                    res['number'] = bking.user.phone_number
+                    addre = bking.address.address_line_1 + ', ' + bking.address.address_line_2 + ', ' + bking.address.city + ', ' + bking.address.state
+                    res['address'] = addre
+                    res['lat'] = bking.address.latitude
+                    res['long'] = bking.address.longitude
+                    res['no_of_people'] = bking.friends.count()
+                    res['pincode'] = bking.address.pincode
+                    res['time_slot'] = bking.slot_time
+                    res['status'] = bking.booking_status
+                    response.append(res)
             return success_response(response)
         except Exception as e:
             return bad_request_response(str(e))
