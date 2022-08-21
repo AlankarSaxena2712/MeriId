@@ -230,7 +230,7 @@ class BookingOperatorSlot(generics.RetrieveUpdateAPIView):
                 response.append({
                     "id": booking.booking_id,
                     "slot": booking.slot_time,
-                    "status": booking.status
+                    "status": booking.booking_status
                 })
             return success_response(response)
         except Exception as e:
