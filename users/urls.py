@@ -23,5 +23,5 @@ urlpatterns = [
     path("operator/time_slot/<str:uuid>", OperatorWiseTimeSlotsApiView.as_view(), name="operator-time-slot"),
     path("send-noti", send_noti, name="send-noti"),
     path("operator/location/<str:uuid>", OperatorLocationView.as_view(), name="operator_location"),
-    path("operator/location/<str:uuid>", LocationUpdateApiView.as_view(), name="location-update"),
+    path("operator/location/update/<str:uuid>", LocationUpdateApiView.as_view(), name="location-update"),
 ]
