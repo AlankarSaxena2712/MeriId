@@ -357,6 +357,7 @@ class AttendancePunchOutView(generics.CreateAPIView):
         try:
             attendance = Attendance.objects.get(user=request.user, date=date)
             attendance.punch_out = punch_out
+            attendance.status = "done"
             attendance.save()
         except Attendance.DoesNotExist:
             return bad_request_response({"message": "Attendance not found"})

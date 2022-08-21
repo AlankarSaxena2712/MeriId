@@ -33,6 +33,7 @@ BOOKING_STATUS = (
 ATTENDANCE_STATUS = (
     ('present', 'present'),
     ('absent', 'absent'),
+    ('done', 'done'),
 )
 
 BOOKING_SLOT_TIME = (
