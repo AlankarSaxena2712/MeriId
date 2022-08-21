@@ -16,6 +16,7 @@ urlpatterns = [
     path("kyc/type", UserSetKycTypeApi.as_view(), name="kyc-type"),
     path("kyc/docs", KycView.as_view(), name="kyc-docs"),
     path("attendance", AttendanceView.as_view(), name="attendance"),
+    path("attendance/download", DownloadAttendanceView.as_view(), name="attendance-download"),
     path("attendance/punch-out", AttendancePunchOutView.as_view(), name="attendance-punch-out"),
     path("admin/operator/list", AdminWiseOperatorListView.as_view(), name="admin-wise-operator-list"),
     path("operator/time_slot/<str:uuid>", OperatorWiseTimeSlotsApiView.as_view(), name="operator-time-slot"),
