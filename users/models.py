@@ -97,7 +97,7 @@ class Attendance(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False ,  unique=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date = models.DateField()
-    punch_in = models.TimeField()
+    punch_in = models.TimeField(null=True, blank=True)
     punch_out = models.TimeField(null=True, blank=True)
     status = models.CharField(max_length=255, choices=ATTENDANCE_STATUS, default='absent')
     slot_10_to_11 = models.BooleanField(default=False, help_text="False if operator is busy in this slot else True")

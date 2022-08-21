@@ -80,8 +80,9 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'ckeditor',
     "fcm_django",
+    "django_apscheduler",
 
-    'users',
+    'users.apps.UsersConfig',
     'general',
     'booking'
 ]

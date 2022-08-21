@@ -1,10 +1,13 @@
 
 import random
+from datetime import datetime, timedelta
 from django.contrib import auth
 from rest_framework.authtoken.models import Token
 import time
 
-from users.models import Address
+from users.models import Address, Attendance
+
+User = auth.get_user_model()
 
 
 def create_token(username, password):
@@ -36,3 +39,16 @@ def UIDAI_address():
         )
         address.save()
         return address
+
+def create_attendance_for_next_day():
+    operators = User.objects.filter(role='operator')
+    for operator in operators:
+        if Attendance.objects.filter(user=operator, date=datetime.now().date() + timedelta(days=1)).exists():
+            pass
+        else:
+            attendance = Attendance(
+                user=operator,
+                date=datetime.now().date() + timedelta(days=1),
+                status='absent'
+            )
+            attendance.save()
