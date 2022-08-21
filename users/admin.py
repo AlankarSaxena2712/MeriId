@@ -37,6 +37,7 @@ admin.site.register(Kyc)
 admin.site.register(Token)
 admin.site.register(Address)
 admin.site.register(Attendance)
+admin.site.register(Issue)
 admin.site.register(PinCode)
 
 admin.site.unregister(Group)
