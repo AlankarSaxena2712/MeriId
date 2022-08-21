@@ -7,6 +7,7 @@ urlpatterns = [
     path('login/admin', AdminLoginView.as_view(), name='admin-login'),
     path('otp-send', SendOtp.as_view(), name='otp-send'),
     path('profile', UserPrfile.as_view(), name='profile'),
+    path('profile/operator', UserOperatorProfile.as_view(), name='profile'),
     path('operators', OperatorList.as_view(), name='operator-list'),
     path('operators/<str:uuid>', OperatorUpdateView.as_view(), name='operator-update'),
     path('users', UserList.as_view(), name='user-list'),
@@ -22,5 +23,5 @@ urlpatterns = [
     path("operator/time_slot/<str:uuid>", OperatorWiseTimeSlotsApiView.as_view(), name="operator-time-slot"),
     path("send-noti", send_noti, name="send-noti"),
     path("operator/location/<str:uuid>", OperatorLocationView.as_view(), name="operator_location"),
-
+    path("operator/location/<str:uuid>", LocationUpdateApiView.as_view(), name="location-update"),
 ]

@@ -108,6 +108,23 @@ class UserPrfile(generics.RetrieveAPIView):
 
 
 @permission_classes((IsAuthenticated,))
+class UserOperatorProfile(generics.RetrieveAPIView):
+    serializer_class = OperatorAddSerializer
+
+    def get(self, request, *args, **kwargs):
+        attendance = Attendance.objects.get(user=request.user, date=datetime.now().date()).status
+        response = {
+            "name": request.user.name,
+            "email": request.user.email,
+            "number": request.user.phone_number,
+            "userId": request.user.user_id,
+            "status": request.user.status,
+            "attendance": attendance
+        }
+        return success_response(response)
+
+
+@permission_classes((IsAuthenticated,))
 class OperatorList(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
@@ -217,7 +234,7 @@ class IssueView(generics.RetrieveAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(user=request.user)
             return success_response(serializer.data)
         return bad_request_response(serializer.errors)
 
@@ -453,3 +470,15 @@ class OperatorLocationView(generics.RetrieveAPIView):
             "status": status
         }
         return success_response(response)
+
+
+@permission_classes((IsAuthenticated,))
+class LocationUpdateApiView(generics.UpdateAPIView):
+    serializer_class = UserSerializer
+
+    def put(self, request, *args, **kwargs):
+        address = Address.objects.get(user=request.user)
+        address.latitude = request.data["lat"]
+        address.longitude = request.data["long"]
+        address.save()
+        return success_response({"message": "Location updated successfully"})
