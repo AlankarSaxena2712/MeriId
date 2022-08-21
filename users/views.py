@@ -114,6 +114,7 @@ class UserOperatorProfile(generics.RetrieveAPIView):
     def get(self, request, *args, **kwargs):
         attendance = Attendance.objects.get(user=request.user, date=datetime.now().date()).status
         response = {
+            "uuid": request.user.uuid,
             "name": request.user.name,
             "email": request.user.email,
             "number": request.user.phone_number,
