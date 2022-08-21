@@ -268,3 +268,21 @@ class OperatorWiseBooking(generics.RetrieveAPIView):
             return success_response(response)
         except Exception as e:
             return bad_request_response(str(e))
+
+
+@permission_classes((IsAuthenticated, ))
+class BookingStatusUpdateByOperatorAPI(generics.UpdateAPIView):
+    """
+    Retrieve booking
+    """
+    serializer_class = BookingSerializer
+
+    def put(self, request, *args, **kwargs):
+        try:
+            data = request.data
+            booking = Booking.objects.get(uuid=data['uuid'])
+            booking.booking_status = data['status']
+            booking.save()
+            return success_response({'message': 'Booking status updated'})
+        except Exception as e:
+            return bad_request_response(str(e))

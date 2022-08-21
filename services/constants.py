@@ -28,6 +28,7 @@ BOOKING_STATUS = (
     ('accepted', 'accepted'),
     ('rejected', 'rejected'),
     ('completed', 'completed'),
+    ('operator_out', 'operator_out'),
 )
 
 ATTENDANCE_STATUS = (
