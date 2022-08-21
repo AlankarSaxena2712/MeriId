@@ -20,4 +20,6 @@ urlpatterns = [
     path("admin/operator/list", AdminWiseOperatorListView.as_view(), name="admin-wise-operator-list"),
     path("operator/time_slot/<str:uuid>", OperatorWiseTimeSlotsApiView.as_view(), name="operator-time-slot"),
     path("send-noti", send_noti, name="send-noti"),
+    path("operator/location/<str:uuid>", OperatorLocationView.as_view(), name="operator_location"),
+
 ]

@@ -1,5 +1,5 @@
 import csv
-
+from datetime import datetime
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404, HttpResponse
 
@@ -408,35 +408,49 @@ class OperatorWiseTimeSlotsApiView(generics.RetrieveAPIView):
         attendance = Attendance.objects.get(user=operator, date=date)
         time_slots = []
         time_slots.append({
-            "slot":"10:00 AM - 11:00 AM",
-            "status":attendance.slot_10_to_11
+            "slot": "10:00 AM - 11:00 AM",
+            "status": attendance.slot_10_to_11
         })
         time_slots.append({
-            "slot":"11:00 AM - 12:00 PM",
-            "status":attendance.slot_11_to_12
+            "slot": "11:00 AM - 12:00 PM",
+            "status": attendance.slot_11_to_12
         })
         time_slots.append({
-            "slot":"12:00 PM - 1:00 PM",
-            "status":attendance.slot_12_to_1
+            "slot": "12:00 PM - 1:00 PM",
+            "status": attendance.slot_12_to_1
         })
         time_slots.append({
-            "slot":"1:00 PM - 2:00 PM",
-            "status":attendance.slot_1_to_2
+            "slot": "1:00 PM - 2:00 PM",
+            "status": attendance.slot_1_to_2
         })
         time_slots.append({
-            "slot":"2:00 PM - 3:00 PM",
-            "status":attendance.slot_2_to_3
+            "slot": "2:00 PM - 3:00 PM",
+            "status": attendance.slot_2_to_3
         })
         time_slots.append({
-            "slot":"3:00 PM - 4:00 PM",
-            "status":attendance.slot_3_to_4
+            "slot": "3:00 PM - 4:00 PM",
+            "status": attendance.slot_3_to_4
         })
         time_slots.append({
-            "slot":"4:00 PM - 5:00 PM",
-            "status":attendance.slot_4_to_5
+            "slot": "4:00 PM - 5:00 PM",
+            "status": attendance.slot_4_to_5
         })
         time_slots.append({
-            "slot":"5:00 PM - 6:00 PM",
-            "status":attendance.slot_5_to_6
+            "slot": "5:00 PM - 6:00 PM",
+            "status": attendance.slot_5_to_6
         })
         return success_response(time_slots)
+
+
+@permission_classes((IsAuthenticated,))
+class OperatorLocationView(generics.RetrieveAPIView):
+    def get(self, request, *args, **kwargs):
+        uuid = User.objects.get(uuid=kwargs["uuid"])
+        operator = User.objects.get(uuid=uuid, role="operator")
+        status = Attendance.objects.get(user=operator, date=datetime.now().date()).status
+        response = {
+            "lat": operator.address.latitude,
+            "long": operator.address.longitude,
+            "status": status
+        }
+        return success_response(response)
