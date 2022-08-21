@@ -465,7 +465,7 @@ class OperatorWiseTimeSlotsApiView(generics.RetrieveAPIView):
 class OperatorLocationView(generics.RetrieveAPIView):
     def get(self, request, *args, **kwargs):
         operator = User.objects.get(uuid=kwargs["uuid"], role="operator")
-        status = Attendance.objects.get(user=operator).status
+        status = Attendance.objects.get(user=operator, date=datetime.now().date()).status
         response = {
             "lat": operator.address.latitude if operator.address else None,
             "long": operator.address.longitude if operator.address else None,

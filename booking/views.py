@@ -239,3 +239,32 @@ class BookingOperatorSlot(generics.RetrieveUpdateAPIView):
             return bad_request_response(str(e))
 
 
+@permission_classes((IsAuthenticated, ))
+class OperatorWiseBooking(generics.RetrieveAPIView):
+    """
+    Retrieve booking
+    """
+    serializer_class = BookingSerializer
+
+    def get(self, request, *args, **kwargs):
+        try:
+            operator = request.user
+            bookings = Booking.objects.filter(operator=operator)
+            response = []
+            for bking in bookings:
+                res = {}
+                res['uuid'] = bking.uuid
+                res['booking_id'] = bking.booking_id
+                res['date'] = bking.slot_date
+                res['name'] = bking.user.name
+                addre = bking.address.address_line_1 + ', ' + bking.address.address_line_2 + ', ' + bking.address.city + ', ' + bking.address.state
+                res['address'] = addre
+                res['lat'] = bking.address.latitude
+                res['long'] = bking.address.longitude
+                res['no_of_people'] = bking.friends.count()
+                res['pincode'] = bking.address.pincode
+                res['time_slot'] = bking.slot_time
+                response.append(res)
+            return success_response(response)
+        except Exception as e:
+            return bad_request_response(str(e))
