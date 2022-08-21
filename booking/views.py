@@ -159,7 +159,7 @@ class AdminWiseBookingList(generics.RetrieveAPIView):
         try:
             admin = request.user
             pincodes = admin.pincodes.values_list('pincode', flat=True)
-            bookings = Booking.objects.filter(address__pincode__in=pincodes, date=datetime.now().date())
+            bookings = Booking.objects.filter(address__pincode__in=pincodes, slot_date=datetime.now().date())
             response = []
             for bking in bookings:
                 res = {}
