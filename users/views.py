@@ -1,4 +1,5 @@
 import csv
+from datetime import datetime
 
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404, HttpResponse
@@ -401,7 +402,7 @@ class OperatorWiseTimeSlotsApiView(generics.RetrieveAPIView):
 
     def get(self, request, *args, **kwargs):
         operator = User.objects.get(uuid=kwargs["uuid"])
-        date = request.GET.get("date")
+        date = datetime.now().date()
         attendance = Attendance.objects.get(user=operator, date=date)
         time_slots = []
         if attendance.slot_10_to_11 == True:
