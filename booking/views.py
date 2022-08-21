@@ -170,6 +170,8 @@ class AdminWiseBookingList(generics.RetrieveAPIView):
                 addre = bking.address.address_line_1 + ', ' + bking.address.address_line_2 + ', ' + bking.address.city + ', ' + bking.address.state
                 res['address'] = addre
                 res['pincode'] = bking.address.pincode
+                res['slot_time'] = bking.slot_time
+                res['operator'] = bking.operator.name
                 response.append(res)
             return success_response(response)
         except Exception as e:
