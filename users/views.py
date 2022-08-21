@@ -12,7 +12,8 @@ from services.twillio import send_twilio_message
 from services.utility import create_otp, create_token
 from users.models import Address, Attendance, Issue, Kyc
 
-from users.serializers import AdminLoginSerializer, AttendanceSerializer, LoginSerializer, OperatorAddSerializer, OtpSendSerializer, UserSerializer, KycSerializer, IssueSerializer, UserSetKycTypeSerializer, UserStatusSerializer
+from users.serializers import AdminLoginSerializer, AttendanceSerializer, LoginSerializer, OperatorAddSerializer, \
+    OtpSendSerializer, UserSerializer, KycSerializer, IssueSerializer, UserSetKycTypeSerializer, UserStatusSerializer
 
 User = get_user_model()
 
@@ -47,7 +48,7 @@ class SendOtp(generics.CreateAPIView):
         return bad_request_response(serializer.errors)
 
 
-@permission_classes((AllowAny, ))
+@permission_classes((AllowAny,))
 class LoginAPIView(generics.CreateAPIView):
     serializer_class = LoginSerializer
 
@@ -73,7 +74,7 @@ class LoginAPIView(generics.CreateAPIView):
         return bad_request_response({"message": "Invalid OTP!"})
 
 
-@permission_classes((AllowAny, ))
+@permission_classes((AllowAny,))
 class AdminLoginView(generics.CreateAPIView):
     serializer_class = AdminLoginSerializer
 
@@ -89,7 +90,8 @@ class AdminLoginView(generics.CreateAPIView):
             else:
                 return bad_request_response({"message": "Invalid Username/Password"})
 
-@permission_classes((IsAuthenticated, ))
+
+@permission_classes((IsAuthenticated,))
 class UserPrfile(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
@@ -105,7 +107,7 @@ class UserPrfile(generics.RetrieveAPIView):
         return bad_request_response(serializer.errors)
 
 
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticated,))
 class OperatorList(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
@@ -132,7 +134,7 @@ class OperatorList(generics.RetrieveAPIView):
         return bad_request_response(serializer.errors)
 
 
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticated,))
 class OperatorUpdateView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = OperatorAddSerializer
 
@@ -158,7 +160,7 @@ class OperatorUpdateView(generics.RetrieveUpdateDestroyAPIView):
         return success_response({"message": "User deleted successfully"})
 
 
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticated,))
 class UserList(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
@@ -175,7 +177,7 @@ class UserList(generics.RetrieveAPIView):
         return bad_request_response(serializer.errors)
 
 
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticated,))
 class AddOperator(generics.CreateAPIView):
     serializer_class = OperatorAddSerializer
 
@@ -203,7 +205,7 @@ class AddOperator(generics.CreateAPIView):
         return bad_request_response(serializer.errors)
 
 
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticated,))
 class IssueView(generics.RetrieveAPIView):
     serializer_class = IssueSerializer
 
@@ -220,7 +222,7 @@ class IssueView(generics.RetrieveAPIView):
         return bad_request_response(serializer.errors)
 
 
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticated,))
 class CurrentUserStatusApi(generics.RetrieveAPIView):
     serializer_class = UserStatusSerializer
 
@@ -229,7 +231,7 @@ class CurrentUserStatusApi(generics.RetrieveAPIView):
         return success_response(serializer.data)
 
 
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticated,))
 class UserSetKycTypeApi(generics.CreateAPIView):
     serializer_class = UserSetKycTypeSerializer
 
@@ -241,7 +243,7 @@ class UserSetKycTypeApi(generics.CreateAPIView):
         return bad_request_response(serializer.errors)
 
 
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticated,))
 class KycView(generics.CreateAPIView):
     serializer_class = KycSerializer
 
@@ -293,7 +295,7 @@ class KycView(generics.CreateAPIView):
         return success_response({"message": "Kyc added successfully"})
 
 
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticated,))
 class AttendanceView(generics.CreateAPIView):
     serializer_class = AttendanceSerializer
 
@@ -326,7 +328,7 @@ class AttendanceView(generics.CreateAPIView):
         return success_response({"message": "Attendance added successfully"})
 
 
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticated,))
 class AttendancePunchOutView(generics.CreateAPIView):
     serializer_class = AttendanceSerializer
 
@@ -343,7 +345,7 @@ class AttendancePunchOutView(generics.CreateAPIView):
         return success_response({"message": "Attendance added successfully"})
 
 
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticated,))
 class DownloadAttendanceView(generics.RetrieveAPIView):
     serializer_class = AttendanceSerializer
 
@@ -355,7 +357,8 @@ class DownloadAttendanceView(generics.RetrieveAPIView):
             operator = User.objects.get(uuid=operator_uuid)
             attendance = Attendance.objects.filter(user=operator, date__range=[date_from, date_to])
             response = HttpResponse(content_type='text/csv')
-            response['Content-Disposition'] = f'attachment; filename="attendance-{operator.name}-{date_from}-{date_to}.csv"'
+            response[
+                'Content-Disposition'] = f'attachment; filename="attendance-{operator.name}-{date_from}-{date_to}.csv"'
             writer = csv.writer(response)
             writer.writerow(['User', 'Date', 'Punch In', 'Punch Out', 'Status'])
             for a in attendance:
@@ -376,7 +379,7 @@ def send_noti(request):
     return HttpResponse("ok")
 
 
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticated,))
 class AdminWiseOperatorListView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
@@ -395,7 +398,7 @@ class AdminWiseOperatorListView(generics.RetrieveAPIView):
         return success_response(response)
 
 
-@permission_classes((IsAuthenticated, ))
+@permission_classes((IsAuthenticated,))
 class OperatorWiseTimeSlotsApiView(generics.RetrieveAPIView):
     serializer_class = UserSerializer
 
@@ -437,4 +440,3 @@ class OperatorWiseTimeSlotsApiView(generics.RetrieveAPIView):
             "status":attendance.slot_5_to_6
         })
         return success_response(time_slots)
-

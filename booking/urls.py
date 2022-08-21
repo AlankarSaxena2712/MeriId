@@ -9,4 +9,5 @@ urlpatterns = [
     path("order/verify-otp", OrderOtpVerifyAPI.as_view(), name="order_otp_verify"),
     path("booking/admin", AdminWiseBookingList.as_view(), name="booking_admin"),
     path("booking/admin/changes", AdminWiseBookingUpdateApi.as_view(), name="booking_admin_changes"),
+    path("booking/operator-slot/<str:uuid>", BookingOperatorSlot.as_view(), name="booking_operator_slot"),
 ]
