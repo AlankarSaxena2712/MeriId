@@ -10,7 +10,7 @@ from booking.serializers import BookingSerializer
 from services.response import create_response, success_response, bad_request_response
 from services.twillio import send_twilio_message
 from services.utility import create_otp
-from users.models import Address
+from users.models import Address, Attendance
 
 User = get_user_model()
 
@@ -214,6 +214,24 @@ class AdminWiseBookingUpdateApi(generics.RetrieveUpdateAPIView):
             booking.operator = operator
             booking.slot_time = time_slot
             booking.save()
+            attendance = Attendance.objects.get(user=operator)
+            if time_slot == "10:00 AM - 11:00 AM":
+                attendance.slot_10_to_11 = True
+            elif time_slot == "11:00 AM - 12:00 PM":
+                attendance.slot_11_to_12 = True
+            elif time_slot == "12:00 PM - 1:00 PM":
+                attendance.slot_12_to_1 = True
+            elif time_slot == "1:00 PM - 2:00 PM":
+                attendance.slot_1_to_2 = True
+            elif time_slot == "2:00 PM - 3:00 PM":
+                attendance.slot_2_to_3 = True
+            elif time_slot == "3:00 PM - 4:00 PM":
+                attendance.slot_3_to_4 = True
+            elif time_slot == "4:00 PM - 5:00 PM":
+                attendance.slot_4_to_5 = True
+            elif time_slot == "5:00 PM - 6:00 PM":
+                attendance.slot_5_to_6 = True
+            attendance.save()
             return success_response({'message': 'Booking status updated'})
         except Exception as e:
             return bad_request_response(str(e))

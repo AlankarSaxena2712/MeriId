@@ -484,3 +484,31 @@ class LocationUpdateApiView(generics.UpdateAPIView):
         address.longitude = request.data["long"]
         address.save()
         return success_response({"message": "Location updated successfully"})
+
+
+@permission_classes((IsAuthenticated,))
+class ReleaseOperatorSlot(generics.UpdateAPIView):
+    serializer_class = UserSerializer
+
+    def put(self, request, *args, **kwargs):
+        operator = User.objects.get(uuid=kwargs["uuid"])
+        time_slot = request.data["slot"]
+        attendance = Attendance.objects.get(user=operator, date=datetime.now().date())
+        if time_slot == "10:00 AM - 11:00 AM":
+            attendance.slot_10_to_11 = False
+        elif time_slot == "11:00 AM - 12:00 PM":
+            attendance.slot_11_to_12 = False
+        elif time_slot == "12:00 PM - 1:00 PM":
+            attendance.slot_12_to_1 = False
+        elif time_slot == "1:00 PM - 2:00 PM":
+            attendance.slot_1_to_2 = False
+        elif time_slot == "2:00 PM - 3:00 PM":
+            attendance.slot_2_to_3 = False
+        elif time_slot == "3:00 PM - 4:00 PM":
+            attendance.slot_3_to_4 = False
+        elif time_slot == "4:00 PM - 5:00 PM":
+            attendance.slot_4_to_5 = False
+        elif time_slot == "5:00 PM - 6:00 PM":
+            attendance.slot_5_to_6 = False
+        attendance.save()
+        return success_response({"message": "Slot released successfully"})
