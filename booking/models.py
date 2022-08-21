@@ -59,14 +59,17 @@ class Booking(models.Model):
     def save(self, *args, **kwargs):
         super(Booking, self).save(*args, **kwargs)
         if self.booking_status == "completed":
-            address = UIDAI_address()
-            booking = Booking.objects.get(uuid=self.uuid)
-            order = Order(
-                booking=booking,
-                address=address
-            )
-            order.save()
-            super(Booking, self).save(*args, **kwargs)
+            try:
+                address = UIDAI_address()
+                booking = Booking.objects.get(uuid=self.uuid)
+                order = Order(
+                    booking=booking,
+                    address=address
+                )
+                order.save()
+                super(Booking, self).save(*args, **kwargs)
+            except Exception as e:
+                pass
 
     def __str__(self):
         return f"{self.uuid}"
