@@ -208,9 +208,9 @@ class AdminWiseBookingUpdateApi(generics.RetrieveUpdateAPIView):
             operator = User.objects.get(uuid=data['operator'])
             time_slot = data["time_slot"]
             booking = Booking.objects.get(booking_id=data['booking_id'])
-            booking.status = "accepted"
+            booking.booking_status = "accepted"
             booking.operator = operator
-            booking.time_slot = time_slot
+            booking.slot_time = time_slot
             booking.save()
             return success_response({'message': 'Booking status updated'})
         except Exception as e:
