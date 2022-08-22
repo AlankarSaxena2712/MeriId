@@ -101,16 +101,15 @@ class UpdateUserStatus(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         data = request.data
         user = User.objects.get(uuid=request.user.uuid)
+        user.status = data["status"]
         if data["status"] == "pan":
-            user.status = "pan"
             user.kyc_status = False
         elif data["status"] == "other":
-            user.status = "other"
             user.kyc_status = True
         else:
             return bad_request_response({"message": "wrong status"})
         user.save()
-        return success_response({"message": "user status updated"})
+        return success_response({"status": user.status})
 
 
 @permission_classes((IsAuthenticated,))
