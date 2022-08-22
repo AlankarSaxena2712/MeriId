@@ -2,6 +2,7 @@
 import random
 from datetime import datetime, timedelta
 from django.contrib import auth
+from django.contrib.auth.hashers import make_password, check_password
 from rest_framework.authtoken.models import Token
 import time
 
@@ -52,3 +53,10 @@ def create_attendance_for_next_day():
                 status='absent'
             )
             attendance.save()
+
+
+def create_hash(uuid):
+    return make_password(uuid)
+
+def check_hash(uuid, hash):
+    return check_password(uuid, hash)

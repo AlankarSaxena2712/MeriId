@@ -6,7 +6,7 @@ from rest_framework import generics
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from booking.models import Booking, Friend, Order
+from booking.models import Booking, Friend, Order, Payment
 from booking.serializers import BookingSerializer
 from services.response import create_response, success_response, bad_request_response
 from services.twillio import send_twilio_message
@@ -57,6 +57,12 @@ class BookingView(generics.RetrieveAPIView, generics.CreateAPIView):
                 friend.save()
                 friends.append(friend)
             booking.friends.set(friends)
+            payment = Payment(
+                amount=data["payment"]["amount"],
+                from_user=data["payment"]["from_user"],
+                booking=booking
+            )
+            payment.save()
             return create_response({'message': 'Booking created successfully'})
         except Exception as e:
             return bad_request_response(str(e))
