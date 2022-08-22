@@ -94,6 +94,25 @@ class AdminLoginView(generics.CreateAPIView):
                 return bad_request_response({"message": "Invalid Username/Password"})
 
 
+@permission_classes((IsAuthenticated, ))
+class UpdateUserStatus(generics.CreateAPIView):
+    serializer_class = UserStatusSerializer
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        user = User.objects.get(uuid=request.user.uuid)
+        if data["status"] == "pan":
+            user.status = "pan"
+            user.kyc_status = False
+        elif data["status"] == "other":
+            user.status = "other"
+            user.kyc_status = True
+        else:
+            return bad_request_response({"message": "wrong status"})
+        user.save()
+        return success_response({"message": "user status updated"})
+
+
 @permission_classes((IsAuthenticated,))
 class UserPrfile(generics.RetrieveAPIView):
     serializer_class = UserSerializer

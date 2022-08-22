@@ -11,6 +11,7 @@ urlpatterns = [
     path('operators', OperatorList.as_view(), name='operator-list'),
     path('operators/<str:uuid>', OperatorUpdateView.as_view(), name='operator-update'),
     path('users', UserList.as_view(), name='user-list'),
+    path('user/status/update', UpdateUserStatus.as_view(), name='user-list'),
     path("operator-add", AddOperator.as_view(), name="operator-add"),
     path("issue", IssueView.as_view(), name="issue"),
     path("current-status", CurrentUserStatusApi.as_view(), name="current-status"),
