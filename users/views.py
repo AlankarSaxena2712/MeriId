@@ -109,7 +109,38 @@ class UpdateUserStatus(generics.CreateAPIView):
         else:
             return bad_request_response({"message": "wrong status"})
         user.save()
+        kyc = Kyc(user=user)
+        kyc.save()
         return success_response({"status": user.status})
+
+
+@permission_classes((IsAuthenticated, ))
+class UpdateUserDocumentLink(generics.UpdateAPIView):
+    serializer_class = UserSerializer
+
+    def put(self, request, *args, **kwargs):
+        doc_type = request.data["doc_type"]
+        link = request.data["link"]
+        user = User.objects.get(uuid=request.user.uuid)
+        kyc = Kyc.objects.get(user=user)
+        if doc_type == "pan":
+            kyc.pan_card = link
+            user.status = "aadhar"
+        elif doc_type == "other":
+            kyc.other_documents = link
+            user.status = "video"
+        elif doc_type == "aadhar":
+            kyc.aadhar_card = link
+            user.status = "video"
+        elif doc_type == "video":
+            kyc.video_link = link
+            user.status = "pending"
+        else:
+            return bad_request_response({"message": "invalid doc_type"})
+        kyc.save()
+        user.save()
+        return success_response({"status": user.status})
+        
 
 
 @permission_classes((IsAuthenticated,))
