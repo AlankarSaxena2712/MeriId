@@ -106,8 +106,6 @@ class UpdateUserStatus(generics.CreateAPIView):
             user.kyc_status = False
         elif data["status"] == "other":
             user.kyc_status = True
-        else:
-            return bad_request_response({"message": "wrong status"})
         user.save()
         kyc = Kyc(user=user)
         kyc.save()
@@ -125,20 +123,15 @@ class UpdateUserDocumentLink(generics.UpdateAPIView):
         kyc = Kyc.objects.get(user=user)
         if doc_type == "pan":
             kyc.pan_card = link
-            user.status = "aadhar"
         elif doc_type == "other":
             kyc.other_documents = link
-            user.status = "video"
         elif doc_type == "aadhar":
             kyc.aadhar_card = link
-            user.status = "video"
         elif doc_type == "video":
             kyc.video_link = link
-            user.status = "pending"
         else:
             return bad_request_response({"message": "invalid doc_type"})
         kyc.save()
-        user.save()
         return success_response({"status": user.status})
         
 
