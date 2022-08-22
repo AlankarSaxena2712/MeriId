@@ -44,6 +44,7 @@ class SendOtp(generics.CreateAPIView):
                     send_twilio_message(phone_number, otp)
                 else:
                     new_user = User.objects.create_user(username=phone_number, phone_number=phone_number, password=otp)
+                    user.status = "kyc"
                     new_user.save()
                     send_twilio_message(phone_number, otp)
                 return success_response({'message': "success"})
@@ -72,9 +73,6 @@ class LoginAPIView(generics.CreateAPIView):
                                 "phone_number": user.phone_number,
                             }
                         }
-                        if user.role == "user":
-                            user.status = "kyc"
-                            user.save()
                         return create_response(response)
         return bad_request_response({"message": "Invalid OTP!"})
 
