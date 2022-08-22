@@ -558,3 +558,17 @@ class ReleaseOperatorSlot(generics.UpdateAPIView):
             attendance.slot_5_to_6 = False
         attendance.save()
         return success_response({"message": "Slot released successfully"})
+
+
+@permission_classes((IsAuthenticated, ))
+class UserProfileApiView(generics.RetrieveAPIView):
+    serializer_class = UserSerializer
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        response = {
+            "uuid": user.uuid,
+            "name": user.name,
+            "phone_number": user.phone_number
+        }
+        return success_response(response)
