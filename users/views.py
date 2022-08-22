@@ -59,21 +59,23 @@ class LoginAPIView(generics.CreateAPIView):
         if request.data["phone_number"] is not None or request.data['phone_number'] != "":
             user = generics.get_object_or_404(User, phone_number=request.data["phone_number"])
             if user:
-                if user.check_password(request.data["otp"]):
-                    token = create_token(username=user.username, password=request.data["otp"])
-                    if token:
-                        response = {
-                            "token": token.key,
-                            "user": {
-                                "first_name": user.name,
-                                "email": user.email,
-                                "phone_number": user.phone_number,
+                if user.role == request.data["role"]:
+                    if user.check_password(request.data["otp"]):
+                        token = create_token(username=user.username, password=request.data["otp"])
+                        if token:
+                            response = {
+                                "token": token.key,
+                                "user": {
+                                    "first_name": user.name,
+                                    "email": user.email,
+                                    "phone_number": user.phone_number,
+                                }
                             }
-                        }
-                        if user.role == "user":
-                            user.status = "kyc"
-                            user.save()
-                        return create_response(response)
+                            if user.role == "user":
+                                user.status = "kyc"
+                                user.save()
+                            return create_response(response)
+                return bad_request_response({"message": "invalid user"})
         return bad_request_response({"message": "Invalid OTP!"})
 
 
