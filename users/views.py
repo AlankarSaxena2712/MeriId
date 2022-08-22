@@ -107,8 +107,9 @@ class UpdateUserStatus(generics.CreateAPIView):
         elif data["status"] == "other":
             user.kyc_status = True
         user.save()
-        kyc = Kyc(user=user)
-        kyc.save()
+        if not user.kyc:
+            kyc = Kyc(user=user)
+            kyc.save()
         return success_response({"status": user.status})
 
 
