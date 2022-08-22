@@ -70,6 +70,9 @@ class LoginAPIView(generics.CreateAPIView):
                                 "phone_number": user.phone_number,
                             }
                         }
+                        if user.role == "user":
+                            user.status = "kyc"
+                            user.save()
                         return create_response(response)
         return bad_request_response({"message": "Invalid OTP!"})
 

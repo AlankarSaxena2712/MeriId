@@ -47,12 +47,7 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         if len(self.phone_number) == 10:
             self.username = self.phone_number
-        if self.role == 'user':
-            if self.kyc_status:
-                self.status = "other"
-            else:
-                self.status = "pan"
-        elif self.role == 'operator':
+        if self.role == 'operator':
             self.user_id = create_user_id()
             self.status = "active"
         super(User, self).save(*args, **kwargs)
