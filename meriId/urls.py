@@ -21,6 +21,7 @@ from django.urls import path , include
 from rest_framework_swagger.views import get_swagger_view
 
 from meriId.views import admin_redirect
+from users.views import verify_operator
 
 swagger_api_docs_urls = get_swagger_view(title='Meri Id API', url='/')
 
@@ -31,7 +32,7 @@ urlpatterns = [
     path('api/auth/', include("users.urls"), name="Users"),
     path('api/general/', include("general.urls"), name="Users"),
     path('api/booking/', include("booking.urls"), name="Users"),
-
+    path('operator/verify/<str:hash>', verify_operator, name="verify_operator"),
 ]
 
 

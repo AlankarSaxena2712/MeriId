@@ -1,7 +1,7 @@
 import csv
 from datetime import datetime
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404, HttpResponse
+from django.shortcuts import get_object_or_404, HttpResponse, render
 
 from rest_framework import generics
 from rest_framework.decorators import permission_classes
@@ -11,6 +11,7 @@ from services.response import create_response, success_response, bad_request_res
 from services.twillio import send_twilio_message
 from services.utility import create_otp, create_token
 from users.models import Address, Attendance, Issue, Kyc
+from booking.models import Booking
 
 from users.serializers import AdminLoginSerializer, AttendanceSerializer, LoginSerializer, OperatorAddSerializer, \
     OtpSendSerializer, UserSerializer, KycSerializer, IssueSerializer, UserSetKycTypeSerializer, UserStatusSerializer
@@ -572,3 +573,14 @@ class UserProfileApiView(generics.RetrieveAPIView):
             "phone_number": user.phone_number
         }
         return success_response(response)
+
+
+def verify_operator(request, hash):
+    try:
+        operator = hash.split("--__--__--__--__--__--__--")[0]
+        booking = hash.split("--__--__--__--__--__--__--")[1]
+        operator = User.objects.get(uuid=operator, role="operator")
+        booking = Booking.objects.get(uuid=booking, operator=operator)
+        return render(request, "operator_verify.html")
+    except:
+        return render(request, "unauthorized.html")

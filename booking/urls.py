@@ -12,4 +12,5 @@ urlpatterns = [
     path("booking/operator-slot/<str:uuid>", BookingOperatorSlot.as_view(), name="booking_operator_slot"),
     path('list/operator', OperatorWiseBooking.as_view(), name='operator_wise_booking'),
     path("status/update", BookingStatusUpdateByOperatorAPI.as_view(), name="booking_status_update"),
+    path("operator/verify", CreateHashedWebLinkForOperator.as_view(), name="operator-verify"),
 ]

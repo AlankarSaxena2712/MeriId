@@ -5,12 +5,13 @@ from django.contrib.auth import get_user_model
 from rest_framework import generics
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.request import Request
 
 from booking.models import Booking, Friend, Order, Payment
 from booking.serializers import BookingSerializer
 from services.response import create_response, success_response, bad_request_response
 from services.twillio import send_twilio_message
-from services.utility import create_otp
+from services.utility import create_hash, create_otp
 from users.models import Address, Attendance
 
 User = get_user_model()
@@ -315,3 +316,15 @@ class BookingStatusUpdateByOperatorAPI(generics.UpdateAPIView):
             return success_response({'message': 'Booking status updated'})
         except Exception as e:
             return bad_request_response(str(e))
+
+
+@permission_classes((IsAuthenticated, ))
+class CreateHashedWebLinkForOperator(generics.CreateAPIView):
+    serializer_class = BookingSerializer
+
+    def post(self, request, *args, **kwargs):
+        operator_uuid = request.data["uuid"]
+        booking_uuid = request.data["booking"]
+        new_code = operator_uuid + "--__--__--__--__--__--__--" + booking_uuid
+        url = f"https://meriid.herokuapp.com/operator/verify/{new_code}"
+        return success_response({"url": url})
