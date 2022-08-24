@@ -301,7 +301,7 @@ class OperatorWiseBooking(generics.RetrieveAPIView):
             attendance = Attendance.objects.get(user=operator, date=datetime.now().date())
             response = []
             for bking in bookings:
-                if attendance.status == "present":
+                if attendance.status == "present" and bking.booking_status != "completed":
                     res = {}
                     res['uuid'] = bking.uuid
                     res['booking_id'] = bking.booking_id
