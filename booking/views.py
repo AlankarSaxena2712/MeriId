@@ -44,13 +44,12 @@ class BookingView(generics.RetrieveAPIView, generics.CreateAPIView):
             booking = Booking(
                 user=request.user,
                 slot_date=data['slot_date'],
-                booking_type=data['booking_type'],
                 address=address,
             )
             booking.save()
             friends = []
             for fr in data['friends']:
-                if not fr["name"] is None:
+                if fr["name"] is not None:
                     friend = Friend(
                         name=fr['name'],
                         phone_number=fr['phone_number'],
