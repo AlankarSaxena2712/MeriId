@@ -26,10 +26,28 @@ class BookingView(generics.RetrieveAPIView, generics.CreateAPIView):
 
     def get(self, request, *args, **kwargs):
         response = []
-        booking = Booking.objects.filter(user=request.user)
-        # for bking in bookings
-        serializer = self.get_serializer(Booking.objects.all(), many=True)
-        return success_response(serializer.data)
+        bookings = Booking.objects.filter(user=request.user)
+        for booking in bookings:
+            friends = booking.friends.all()
+            res = {
+                "address": f"{booking.address.address_line_1}, {booking.address.address_line_2}, {booking.address.city}, {booking.address.state}, {booking.address.pincode}",
+                "uuid": booking.uuid,
+                "booking_id": booking.booking_id,
+                "slot_date": booking.slot_date,
+                "slot_time": booking.slot_time if booking.slot_time else "",
+                "friends": [],
+                "operator": {
+                    "name": booking.operator.name if booking.operator else "",
+                    "phone_number": booking.operator.phone_number if booking.operator else ""
+                }
+            }
+            for friend in friends:
+                res["friends"].append({
+                        "name":friend.name,
+                        "phone_number":friend.phone_number,
+                })
+            response.append(res)
+        return success_response(response)
 
     def post(self, request, *args, **kwargs):
         try:
