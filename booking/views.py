@@ -345,8 +345,13 @@ class CreateHashedWebLinkForOperator(generics.CreateAPIView):
     serializer_class = BookingSerializer
 
     def post(self, request, *args, **kwargs):
+        image_url = request.data["image_url"]
         operator_uuid = request.data["uuid"]
         booking_uuid = request.data["booking"]
+        booking = Booking.objects.get(uuid=booking_uuid)
+        booking.verification_image = image_url
+        booking.booking_status = "completed"
+        booking.save()
         new_code = operator_uuid + "--__--__--__--__--__--__--" + booking_uuid
         url = f"https://meriid.herokuapp.com/operator/verify/{new_code}"
         return success_response({"url": url})
