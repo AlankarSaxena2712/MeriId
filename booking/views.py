@@ -50,13 +50,15 @@ class BookingView(generics.RetrieveAPIView, generics.CreateAPIView):
             booking.save()
             friends = []
             for fr in data['friends']:
-                friend = Friend(
-                    name=fr['name'],
-                    phone_number=fr['phone_number'],
-                    reason=fr['reason'],
-                )
-                friend.save()
-                friends.append(friend)
+                if not fr["name"] is None:
+                    friend = Friend(
+                        name=fr['name'],
+                        phone_number=fr['phone_number'],
+                        reason=fr['reason'],
+                        booking_type=data['booking_type'],
+                    )
+                    friend.save()
+                    friends.append(friend)
             booking.friends.set(friends)
             payment = Payment(
                 amount=data["payment"]["amount"],
@@ -64,7 +66,7 @@ class BookingView(generics.RetrieveAPIView, generics.CreateAPIView):
                 booking=booking
             )
             payment.save()
-            return create_response({'message': 'Booking created successfully'})
+            return create_response({'booking_id': booking.uuid})
         except Exception as e:
             return bad_request_response(str(e))
 

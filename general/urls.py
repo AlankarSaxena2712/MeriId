@@ -6,5 +6,5 @@ urlpatterns = [
     path("guidelines", GuidelinesView.as_view(), name="guidelines"),
     path("feedback", FeedbackView.as_view(), name="feedback"),
     path("notice", NoticeView.as_view(), name="notice"),
-    path("phone-number-otp", otpTelegram(), name="telegram"),
+    # path("phone-number-otp", otpTelegram(), name="telegram"),
 ]
