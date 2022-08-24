@@ -25,6 +25,9 @@ class BookingView(generics.RetrieveAPIView, generics.CreateAPIView):
     serializer_class = BookingSerializer
 
     def get(self, request, *args, **kwargs):
+        response = []
+        booking = Booking.objects.filter(user=request.user)
+        # for bking in bookings
         serializer = self.get_serializer(Booking.objects.all(), many=True)
         return success_response(serializer.data)
 
@@ -54,7 +57,7 @@ class BookingView(generics.RetrieveAPIView, generics.CreateAPIView):
                         name=fr['name'],
                         phone_number=fr['phone_number'],
                         reason=fr['reason'],
-                        booking_type=data['booking_type'],
+                        booking_type=fr['booking_type'],
                     )
                     friend.save()
                     friends.append(friend)
