@@ -80,14 +80,14 @@ class AadharAddressPrePopulateAPI(generics.RetrieveAPIView):
         try:
             response = {}
             address = AadharAddress.objects.get(aadhar_number=kwargs["aadhar"])
-            response["address_line_1"] = address.address_line_1
-            response["address_line_2"] = address.address_line_2
-            response["city"] = address.city
-            response["state"] = address.state
-            response["pincode"] = address.pincode
-            response["latitude"] = address.latitude
-            response["longitude"] = address.longitude
+            response["address_line_1"] = address.address.address_line_1
+            response["address_line_2"] = address.address.address_line_2
+            response["city"] = address.address.city
+            response["state"] = address.address.state
+            response["pincode"] = address.address.pincode
+            response["latitude"] = address.address.latitude
+            response["longitude"] = address.address.longitude
             return success_response(response)
         except Exception as e:
-            return bad_request_response({"error": e})
+            return bad_request_response({"error": str(e)})
 
