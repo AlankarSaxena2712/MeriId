@@ -3,7 +3,7 @@ import uuid as uuid
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from services.constants import BOOKING_SLOT_TIME, BOOKING_STATUS, BOOKING_TYPE
+from services.constants import BOOKING_PREFERENCE, BOOKING_SLOT_TIME, BOOKING_STATUS, BOOKING_TYPE
 from services.utility import UIDAI_address, create_booking_id
 from users.models import Address
 
@@ -53,6 +53,7 @@ class Booking(models.Model):
     verification_image = models.URLField(max_length=255, blank=True, null=True)
     booking_status = models.CharField(max_length=20, default='pending', choices=BOOKING_STATUS)
     address = models.OneToOneField(Address, on_delete=models.CASCADE, blank=True, null=True)
+    preference = models.CharField(max_length=20, null=True, blank=True, choices=BOOKING_PREFERENCE)
 
     created_at = models.DateTimeField(auto_now_add=True)
 

@@ -53,3 +53,8 @@ BOOKING_TYPE = (
     ('create', 'create'),
     ('update', 'update'),
 )
+
+BOOKING_PREFERENCE = (
+    ("male", "male"),
+    ("female", "female"),
+)

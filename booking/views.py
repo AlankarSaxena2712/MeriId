@@ -40,7 +40,8 @@ class BookingView(generics.RetrieveAPIView, generics.CreateAPIView):
                     "name": booking.operator.name if booking.operator else "",
                     "phone_number": booking.operator.phone_number if booking.operator else ""
                 },
-                "status": booking.booking_status
+                "status": booking.booking_status,
+                "preference": booking.preference,
             }
             for friend in friends:
                 res["friends"].append({
@@ -66,6 +67,7 @@ class BookingView(generics.RetrieveAPIView, generics.CreateAPIView):
             booking = Booking(
                 user=request.user,
                 slot_date=data['slot_date'],
+                preference=data['preference'],
                 address=address,
             )
             booking.save()
@@ -203,6 +205,8 @@ class AdminWiseBookingList(generics.RetrieveAPIView):
                 res['pincode'] = bking.address.pincode
                 res['slot_time'] = bking.slot_time
                 res['operator'] = bking.operator.name if bking.operator else None
+                res['preference'] = bking.preference
+                res['status'] = bking.booking_status
                 response.append(res)
             return success_response(response)
         except Exception as e:
