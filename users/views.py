@@ -13,6 +13,8 @@ from services.utility import create_otp, create_token
 from users.models import Address, Attendance, Issue, Kyc
 from booking.models import Booking
 
+from twilio.twiml.messaging_response import MessagingResponse
+
 from users.serializers import AdminLoginSerializer, AttendanceSerializer, LoginSerializer, OperatorAddSerializer, \
     OtpSendSerializer, UserSerializer, KycSerializer, IssueSerializer, UserSetKycTypeSerializer, UserStatusSerializer
 
@@ -612,4 +614,6 @@ class GetMessageFromTwilio(generics.CreateAPIView):
     serializer_class = UserSerializer
 
     def post(self, request, *args, **kwargs):
-        print(request.data)
+        resp = MessagingResponse()
+        resp.message("The Robots are coming! Head for the hills!")
+        return success_response(request.data)
