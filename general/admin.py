@@ -14,3 +14,4 @@ class GuidelineAdmin(admin.ModelAdmin):
 admin.site.register(Guidelines, GuidelineAdmin)
 admin.site.register(Feedback)
 admin.site.register(Notice)
+admin.site.register(AadharAddress)

@@ -7,6 +7,7 @@ from ckeditor.fields import RichTextField
 from booking.models import Booking
 
 from services.constants import USER_ROLE, RATING_CHOICES
+from users.models import Address
 
 User = get_user_model()
 
@@ -59,3 +60,11 @@ class Notice(models.Model):
 
     class Meta:
         verbose_name_plural = "Notices"
+
+
+class AadharAddress(models.Model):
+    aadhar_number = models.CharField(max_length=12)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.aadhar_number
