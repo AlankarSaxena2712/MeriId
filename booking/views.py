@@ -111,7 +111,8 @@ class OperatorBookingLocationView(generics.RetrieveAPIView):
             "booking": {
                 "lat": "",
                 "lng": "",
-            }
+            },
+            "gender": "female"
         }
         bking = Booking.objects.get(uuid=booking)
         operator = bking.operator
@@ -119,6 +120,7 @@ class OperatorBookingLocationView(generics.RetrieveAPIView):
         response['operator']['lng'] = operator.address.longitude
         response['booking']['lat'] = bking.address.latitude
         response['booking']['lng'] = bking.address.longitude
+        response["gender"] = bking.preference
         return success_response(response)
 
 
