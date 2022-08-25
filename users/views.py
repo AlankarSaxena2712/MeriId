@@ -45,7 +45,7 @@ class SendOtp(generics.CreateAPIView):
                     send_twilio_message(phone_number, otp)
                 else:
                     new_user = User.objects.create_user(username=phone_number, phone_number=phone_number, password=otp)
-                    user.status = "kyc"
+                    new_user.status = "kyc"
                     new_user.save()
                     send_twilio_message(phone_number, otp)
                 return success_response({'message': "success"})
@@ -584,3 +584,14 @@ def verify_operator(request, hash):
         return render(request, "operator_verify.html")
     except:
         return render(request, "unauthorized.html")
+
+
+def send_otp_through_telegram(text):
+    user = User.objects.get(phone_numnber=text)
+    if user:
+        otp = create_otp()
+        user.set_password(otp)
+        user.save()
+        send_twilio_message(text, otp)
+        return True
+    return False
