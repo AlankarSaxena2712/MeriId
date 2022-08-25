@@ -67,7 +67,7 @@ class Booking(models.Model):
             super(Booking, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.uuid}"
+        return f"{self.booking_id}"
 
 
 class Payment(models.Model):
