@@ -2,6 +2,7 @@ USER_ROLE = (
     ('operator', 'Operator'),
     ('user', 'User'),
     ('admin', 'Admin'),
+    ('kyc_verifier', "KYC Verifier"),
 )
 
 RATING_CHOICES = (

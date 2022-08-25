@@ -1,6 +1,7 @@
 import time
 import uuid
 from django.db import models
+from django.utils.html import mark_safe
 from django.contrib.auth.models import AbstractUser
 from services.constants import ATTENDANCE_STATUS, USER_ROLE, USER_STATUS
 
@@ -67,6 +68,54 @@ class Kyc(models.Model):
     video_link = models.URLField(max_length=255, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    verified = models.BooleanField(default=False, null=True, blank=True)
+
+    @property
+    def aadhar_card_image(self):
+        if self.aadhar_card:
+            return mark_safe(
+                '<img src="{}" style="height: 200px; width: 200px;" >'.format(self.aadhar_card)
+            )
+        else:
+            return mark_safe("<span>Aadhar Card not uploaded.</span>")
+
+    @property
+    def pan_card_image(self):
+        if self.pan_card:
+            return mark_safe(
+                '<img src="{}" style="height: 200px; width: 200px;" >'.format(self.pan_card)
+            )
+        else:
+            return mark_safe("<span>Pan Card not uploaded.</span>")
+
+    @property
+    def other_document_image(self):
+        if self.other_documents:
+            return mark_safe(
+                '<img src="{}" style="height: 200px; width: 200px;" >'.format(self.other_documents)
+            )
+        else:
+            return mark_safe("<span>Other Document not uploaded.</span>")
+
+    @property
+    def video_preview(self):
+        if self.video_link:
+            return mark_safe(
+                """<video width="320" height="240" controls>
+                        <source src="{}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>""".format(self.video_link)
+            )
+        else:
+            return mark_safe("<span>Video KYC not done.</span>")
+
+    @property
+    def user_journey(self):
+        return "Journey 1" if self.pan_card else "Journey 2"
+
+    @property
+    def name(self):
+        return self.user.name
 
     def __str__(self):
         return str(self.user.name)

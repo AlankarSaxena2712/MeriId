@@ -22,11 +22,13 @@ from rest_framework_swagger.views import get_swagger_view
 
 from meriId.views import admin_redirect
 from users.views import verify_operator
+from users.admin import kyc_verification_admin_site
 
 swagger_api_docs_urls = get_swagger_view(title='Meri Id API', url='/')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('admin/verify-kyc/', kyc_verification_admin_site.urls),
     path("", admin_redirect, name="admin_redirect"),
     path('api/docs/', swagger_api_docs_urls, name="api-docs"),
     path('api/auth/', include("users.urls"), name="Users"),
