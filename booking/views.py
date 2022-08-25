@@ -120,7 +120,10 @@ class OperatorBookingLocationView(generics.RetrieveAPIView):
         response['operator']['lng'] = operator.address.longitude
         response['booking']['lat'] = bking.address.latitude
         response['booking']['lng'] = bking.address.longitude
-        response["gender"] = bking.preference
+        if bking.preference is None:
+            response["gender"] = "male"
+        else:
+            response["gender"] = "female"
         return success_response(response)
 
 
