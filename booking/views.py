@@ -39,7 +39,8 @@ class BookingView(generics.RetrieveAPIView, generics.CreateAPIView):
                 "operator": {
                     "name": booking.operator.name if booking.operator else "",
                     "phone_number": booking.operator.phone_number if booking.operator else ""
-                }
+                },
+                "status": booking.booking_status
             }
             for friend in friends:
                 res["friends"].append({
