@@ -211,7 +211,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
-TWILIO_PHONE_NUMBER = '+12517582264'
+TWILIO_PHONE_NUMBER = os.environ.get("TWILIO_PHONE_NUMBER")
 
 CRONJOBS = [
     ('*/1 * * * * ', 'users.cron.my_scheduled_job')
