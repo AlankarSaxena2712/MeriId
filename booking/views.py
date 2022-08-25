@@ -67,7 +67,7 @@ class BookingView(generics.RetrieveAPIView, generics.CreateAPIView):
             booking = Booking(
                 user=request.user,
                 slot_date=data['slot_date'],
-                preference=data['preference'],
+                preference="male" if data['preference'] == None else "female",
                 address=address,
             )
             booking.save()
