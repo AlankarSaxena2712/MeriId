@@ -42,11 +42,15 @@ class SendOtp(generics.CreateAPIView):
                         return bad_request_response({"message": "invalid user"})
                     user.set_password(otp)
                     user.save()
+                    kyc = Kyc(user=user)
+                    kyc.save()
                     send_twilio_message(phone_number, otp)
                 else:
                     new_user = User.objects.create_user(username=phone_number, phone_number=phone_number, password=otp)
                     new_user.status = "kyc"
                     new_user.save()
+                    kyc = Kyc(user=new_user)
+                    kyc.save()
                     send_twilio_message(phone_number, otp)
                 return success_response({'message': "success"})
         return bad_request_response(serializer.errors)
