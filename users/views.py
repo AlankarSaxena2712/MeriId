@@ -605,3 +605,11 @@ def send_otp_through_telegram(text):
         send_twilio_message(text, otp)
         return True
     return False
+
+
+@permission_classes((AllowAny, ))
+class GetMessageFromTwilio(generics.CreateAPIView):
+    serializer_class = UserSerializer
+
+    def post(self, request, *args, **kwargs):
+        print(request.data)

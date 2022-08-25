@@ -28,4 +28,5 @@ urlpatterns = [
     path("operator/location/<str:uuid>", OperatorLocationView.as_view(), name="operator_location"),
     path("operator/location/update/<str:uuid>", LocationUpdateApiView.as_view(), name="location-update"),
     path("operator/slot/release/<str:uuid>", ReleaseOperatorSlot.as_view(), name="release-operator-slot"),
+    path('sms', GetMessageFromTwilio.as_view(), name="get-message-from-twilio")
 ]
