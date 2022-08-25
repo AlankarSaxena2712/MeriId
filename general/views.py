@@ -2,7 +2,7 @@ from rest_framework import generics
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from general.models import Feedback, Guidelines, Notice
+from general.models import AadharAddress, Feedback, Guidelines, Notice
 from general.serializers import FeedbackSerializer, GuidelinesSerializer, NoticeSerializer
 from services.response import success_response, bad_request_response
 from users.models import User
@@ -70,4 +70,24 @@ class NoticeView(generics.RetrieveAPIView, generics.CreateAPIView):
             serializer.save()
             return success_response(serializer.data)
         return bad_request_response(serializer.errors)
+
+
+@permission_classes((IsAuthenticated, ))
+class AadharAddressPrePopulateAPI(generics.RetrieveAPIView):
+    serializer_class = NoticeSerializer
+
+    def get(self, request, *args, **kwargs):
+        try:
+            response = {}
+            address = AadharAddress.objects.get(aadhar_number=kwargs["aadhar"])
+            response["address_line_1"] = address.address_line_1
+            response["address_line_2"] = address.address_line_2
+            response["city"] = address.city
+            response["state"] = address.state
+            response["pincode"] = address.pincode
+            response["latitude"] = address.latitude
+            response["longitude"] = address.longitude
+            return success_response(response)
+        except Exception as e:
+            return bad_request_response({"error": e})
 
