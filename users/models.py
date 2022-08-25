@@ -3,7 +3,7 @@ import uuid
 from django.db import models
 from django.utils.html import mark_safe
 from django.contrib.auth.models import AbstractUser
-from services.constants import ATTENDANCE_STATUS, USER_ROLE, USER_STATUS
+from services.constants import ATTENDANCE_STATUS, GENDER_CHOICES, USER_ROLE, USER_STATUS
 
 
 def create_user_id():
@@ -41,6 +41,7 @@ class User(AbstractUser):
     kyc_status = models.BooleanField(default=False, help_text="False for (aadhar, pan and video) else True for (other and video)") # False for (aadhar, pan and video) else True for (other and video) 
     aadhar_limit = models.IntegerField(default=5)
     profile = models.URLField(max_length=255, blank=True, null=True)
+    gender = models.CharField(max_length=20, null=True, blank=True, choices=GENDER_CHOICES)
     role = models.CharField(max_length=30, choices=USER_ROLE, default='user')
     address = models.OneToOneField(Address, on_delete=models.CASCADE, blank=True, null=True)
     pincodes = models.ManyToManyField(PinCode, blank=True)

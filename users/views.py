@@ -13,6 +13,8 @@ from services.utility import create_otp, create_token
 from users.models import Address, Attendance, Issue, Kyc
 from booking.models import Booking
 
+from twilio.twiml.messaging_response import MessagingResponse
+
 from users.serializers import AdminLoginSerializer, AttendanceSerializer, LoginSerializer, OperatorAddSerializer, \
     OtpSendSerializer, UserSerializer, KycSerializer, IssueSerializer, UserSetKycTypeSerializer, UserStatusSerializer
 
@@ -174,7 +176,8 @@ class UserOperatorProfile(generics.RetrieveAPIView):
             "number": request.user.phone_number,
             "userId": request.user.user_id,
             "status": request.user.status,
-            "attendance": attendance
+            "attendance": attendance,
+            "gender": request.user.gender
         }
         return success_response(response)
 
@@ -270,6 +273,7 @@ class AddOperator(generics.CreateAPIView):
                 email=data["email"],
                 password="1234",
                 role="operator",
+                gender=data["gender"],
                 address=address
             )
             new_user.save()
@@ -467,6 +471,7 @@ class AdminWiseOperatorListView(generics.RetrieveAPIView):
                 "name": operator.name,
                 "uuid": operator.uuid,
                 "operator_id": operator.user_id,
+                "gender": operator.gender
             })
         return success_response(response)
 
@@ -602,3 +607,13 @@ def send_otp_through_telegram(text):
         send_twilio_message(text, otp)
         return True
     return False
+
+
+@permission_classes((AllowAny, ))
+class GetMessageFromTwilio(generics.CreateAPIView):
+    serializer_class = UserSerializer
+
+    def post(self, request, *args, **kwargs):
+        resp = MessagingResponse()
+        resp.message("The Robots are coming! Head for the hills!")
+        return success_response(request.data)
