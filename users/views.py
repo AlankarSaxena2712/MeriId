@@ -174,7 +174,8 @@ class UserOperatorProfile(generics.RetrieveAPIView):
             "number": request.user.phone_number,
             "userId": request.user.user_id,
             "status": request.user.status,
-            "attendance": attendance
+            "attendance": attendance,
+            "gender": request.user.gender
         }
         return success_response(response)
 
@@ -270,6 +271,7 @@ class AddOperator(generics.CreateAPIView):
                 email=data["email"],
                 password="1234",
                 role="operator",
+                gender=data["gender"],
                 address=address
             )
             new_user.save()
@@ -467,6 +469,7 @@ class AdminWiseOperatorListView(generics.RetrieveAPIView):
                 "name": operator.name,
                 "uuid": operator.uuid,
                 "operator_id": operator.user_id,
+                "gender": operator.gender
             })
         return success_response(response)
 
