@@ -13,5 +13,5 @@ urlpatterns = [
     path('list/operator', OperatorWiseBooking.as_view(), name='operator_wise_booking'),
     path("status/update", BookingStatusUpdateByOperatorAPI.as_view(), name="booking_status_update"),
     path("operator/verify", CreateHashedWebLinkForOperator.as_view(), name="operator-verify"),
-    path('test', GetJobData.as_view(), name="testing"),
+    path('cron', RunCronJob.as_view(), name="cron"),
 ]

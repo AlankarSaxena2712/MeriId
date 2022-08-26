@@ -437,6 +437,15 @@ def automatic_slot_booking():
                         attendance.slot_5_to_6 = True
                         attendance.save()
 
+
+@permission_classes((IsAuthenticated, ))
+class RunCronJob(generics.RetrieveAPIView):
+    serializer_class = BookingSerializer
+
+    def get(self, request, *args, **kwargs):
+        automatic_slot_booking()
+        return success_response([])
+
 @permission_classes((AllowAny, ))
 class GetJobData(generics.RetrieveAPIView):
     serializer_class = BookingSerializer
