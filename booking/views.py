@@ -319,7 +319,7 @@ class OperatorWiseBooking(generics.RetrieveAPIView):
                     res['date'] = bking.slot_date
                     res['name'] = bking.user.name
                     res['number'] = bking.user.phone_number
-                    addre = bking.address.address_line_1 + ', ' + bking.address.address_line_2 + ', ' + bking.address.city + ', ' + bking.address.state + ", " + bking.address.pincode
+                    addre = bking.address.address_line_1 + ', ' + bking.address.address_line_2
                     res['address'] = addre
                     res['lat'] = bking.address.latitude
                     res['long'] = bking.address.longitude
@@ -379,5 +379,43 @@ def automatic_slot_booking():
         for operator in operators:
             if booking.address.pincode == operator.address.pincode:
                 if booking.slot_time == "9:00 AM - 12:00 PM":
-                    operator = None
+                    if operator.attendance_set.slot_9_to_10 == False:
+                        booking.operator = operator
+                        booking.slot_time = "9:00 AM - 10:00 AM"
+                        booking.save()
+                        # operato
+                    elif operator.attendance_set.slot_10_to_11 == False:
+                        booking.operator = operator
+                        booking.slot_time = "10:00 AM - 11:00 PM"
+                        booking.save()
+                    elif operator.attendance_set.slot_11_to_12 == False:
+                        booking.operator = operator
+                        booking.slot_time = "11:00 AM - 12:00 PM"
+                        booking.save()
+                elif booking.slot_time == "12:00 PM - 3:00 PM":
+                    if operator.attendance_set.slot_12_to_1 == False:
+                        booking.operator = operator
+                        booking.slot_time = "12:00 PM - 1:00 PM"
+                        booking.save()
+                    elif operator.attendance_set.slot_1_to_2 == False:
+                        booking.operator = operator
+                        booking.slot_time = "1:00 PM - 2:00 PM"
+                        booking.save()
+                    elif operator.attendance_set.slot_2_to_3 == False:
+                        booking.operator = operator
+                        booking.slot_time = "2:00 PM - 3:00 PM"
+                        booking.save()
+                elif booking.slot_time == "3:00 PM - 6:00 PM":
+                    if operator.attendance_set.slot_3_to_4 == False:
+                        booking.operator = operator
+                        booking.slot_time = "3:00 PM - 4:00 PM"
+                        booking.save()
+                    elif operator.attendance_set.slot_4_to_5 == False:
+                        booking.operator = operator
+                        booking.slot_time = "4:00 PM - 5:00 PM"
+                        booking.save()
+                    elif operator.attendance_set.slot_5_to_6 == False:
+                        booking.operator = operator
+                        booking.slot_time = "5:00 PM - 6:00 PM"
+                        booking.save()
 
