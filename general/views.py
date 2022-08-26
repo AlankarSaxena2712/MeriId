@@ -1,3 +1,5 @@
+from django.shortcuts import render
+
 from rest_framework import generics
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -90,4 +92,9 @@ class AadharAddressPrePopulateAPI(generics.RetrieveAPIView):
             return success_response(response)
         except Exception as e:
             return bad_request_response({"error": str(e)})
+
+
+def sendXml(request):
+    if request.method == "POST":
+        return render(request, 'voice.xml', content_type='text/xml')
 
