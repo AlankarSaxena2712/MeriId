@@ -83,10 +83,15 @@ class KYCAdmin(admin.ModelAdmin):
     list_filter = ["verified"]
 
 
+class AttendanceAdmin(admin.ModelAdmin):
+    list_display = ['uuid', "user", "date", "status"]
+    list_display_links = ["uuid", "user"]
+
+
 admin.site.register(Kyc)
 # admin.site.register(Token)
 admin.site.register(Address)
-admin.site.register(Attendance)
+admin.site.register(Attendance, AttendanceAdmin)
 admin.site.register(Issue)
 admin.site.register(PinCode)
 

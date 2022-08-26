@@ -374,48 +374,75 @@ class CreateHashedWebLinkForOperator(generics.CreateAPIView):
 def automatic_slot_booking():
     status_to_exclude = ['completed', 'operator_out']
     bookings = Booking.objects.filter(slot_date=datetime.now().date(), operator=None).exclude(booking_status__in=status_to_exclude)
-    operators = User.objects.filter(role="operator", attendance_set__status="present")
-    for booking in bookings:
-        for operator in operators:
+    operators = User.objects.filter(role="operator", attendance__status="present")
+    for operator in operators:
+        for booking in bookings:
+            attendance = Attendance.objects.get(user=operator, date=datetime.now().date())
             if booking.address.pincode == operator.address.pincode:
                 if booking.slot_time == "9:00 AM - 12:00 PM":
-                    if operator.attendance_set.slot_9_to_10 == False:
+                    if attendance.slot_9_to_10 == False:
                         booking.operator = operator
                         booking.slot_time = "9:00 AM - 10:00 AM"
                         booking.save()
-                        # operato
-                    elif operator.attendance_set.slot_10_to_11 == False:
+                        attendance.slot_9_to_10 = True
+                        attendance.save()
+                    elif attendance.slot_10_to_11 == False:
                         booking.operator = operator
                         booking.slot_time = "10:00 AM - 11:00 PM"
                         booking.save()
-                    elif operator.attendance_set.slot_11_to_12 == False:
+                        attendance.slot_10_to_11 = True
+                        attendance.save()
+                    elif attendance.slot_11_to_12 == False:
                         booking.operator = operator
                         booking.slot_time = "11:00 AM - 12:00 PM"
                         booking.save()
+                        attendance.slot_11_to_12 = True
+                        attendance.save()
                 elif booking.slot_time == "12:00 PM - 3:00 PM":
-                    if operator.attendance_set.slot_12_to_1 == False:
+                    if attendance.slot_12_to_1 == False:
                         booking.operator = operator
                         booking.slot_time = "12:00 PM - 1:00 PM"
                         booking.save()
-                    elif operator.attendance_set.slot_1_to_2 == False:
+                        attendance.slot_12_to_1 = True
+                        attendance.save()
+                    elif attendance.slot_1_to_2 == False:
                         booking.operator = operator
                         booking.slot_time = "1:00 PM - 2:00 PM"
                         booking.save()
-                    elif operator.attendance_set.slot_2_to_3 == False:
+                        attendance.slot_1_to_2 = True
+                        attendance.save()
+                    elif attendance.slot_2_to_3 == False:
                         booking.operator = operator
                         booking.slot_time = "2:00 PM - 3:00 PM"
                         booking.save()
+                        attendance.slot_2_to_3 = True
+                        attendance.save()
                 elif booking.slot_time == "3:00 PM - 6:00 PM":
-                    if operator.attendance_set.slot_3_to_4 == False:
+                    if attendance.slot_3_to_4 == False:
                         booking.operator = operator
                         booking.slot_time = "3:00 PM - 4:00 PM"
                         booking.save()
-                    elif operator.attendance_set.slot_4_to_5 == False:
+                        attendance.slot_3_to_4 = True
+                        attendance.save()
+                    elif attendance.slot_4_to_5 == False:
                         booking.operator = operator
                         booking.slot_time = "4:00 PM - 5:00 PM"
                         booking.save()
-                    elif operator.attendance_set.slot_5_to_6 == False:
+                        attendance.slot_4_to_5 = True
+                        attendance.save()
+                    elif attendance.slot_5_to_6 == False:
                         booking.operator = operator
                         booking.slot_time = "5:00 PM - 6:00 PM"
                         booking.save()
+                        attendance.slot_5_to_6 = True
+                        attendance.save()
+
+@permission_classes((AllowAny, ))
+class GetJobData(generics.RetrieveAPIView):
+    serializer_class = BookingSerializer
+
+    def get(self, request, *args, **kwargs):
+        automatic_slot_booking()
+        return success_response({})
+
 

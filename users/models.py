@@ -145,6 +145,7 @@ class Attendance(models.Model):
     punch_in = models.TimeField(null=True, blank=True)
     punch_out = models.TimeField(null=True, blank=True)
     status = models.CharField(max_length=255, choices=ATTENDANCE_STATUS, default='absent')
+    slot_9_to_10 = models.BooleanField(default=False, help_text="False if operator is busy in this slot else True")
     slot_10_to_11 = models.BooleanField(default=False, help_text="False if operator is busy in this slot else True")
     slot_11_to_12 = models.BooleanField(default=False, help_text="False if operator is busy in this slot else True")
     slot_12_to_1 = models.BooleanField(default=False, help_text="False if operator is busy in this slot else True")
