@@ -68,6 +68,7 @@ class BookingView(generics.RetrieveAPIView, generics.CreateAPIView):
                 user=request.user,
                 slot_date=data['slot_date'],
                 preference="male" if data['preference'] == None else "female",
+                slot_time=data['slot_time'],
                 address=address,
             )
             booking.save()
@@ -368,3 +369,15 @@ class CreateHashedWebLinkForOperator(generics.CreateAPIView):
             return success_response({"url": url})
         except Exception as e:
             return bad_request_response({"error": e})
+
+
+def automatic_slot_booking():
+    status_to_exclude = ['completed', 'operator_out']
+    bookings = Booking.objects.filter(slot_date=datetime.now().date(), operator=None).exclude(booking_status__in=status_to_exclude)
+    operators = User.objects.filter(role="operator", attendance_set__status="present")
+    for booking in bookings:
+        for operator in operators:
+            if booking.address.pincode == operator.address.pincode:
+                if booking.slot_time == "9:00 AM - 12:00 PM":
+                    operator = None
+
