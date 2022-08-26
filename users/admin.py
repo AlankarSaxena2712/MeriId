@@ -33,6 +33,7 @@ class UserAdmin(BaseUserAdmin):
                 "password",
                 "email",
                 "phone_number",
+                "gender",
                 "name",
                 "status",
                 "kyc_status",
@@ -83,13 +84,13 @@ class KYCAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Kyc)
-admin.site.register(Token)
+# admin.site.register(Token)
 admin.site.register(Address)
 admin.site.register(Attendance)
 admin.site.register(Issue)
 admin.site.register(PinCode)
 
-admin.site.unregister(Group)
+# admin.site.unregister(Group)
 
 kyc_verification_admin_site.register(Kyc, KYCAdmin)
 
